@@ -15,7 +15,8 @@ class MyApp(QtWidgets.QMainWindow):
         notification.notify(
             title = 'Мое уведомление',
             message = 'Система уведомляет Вас о бренности бытия.',
-            app_name = 'PayPlanner'
+            app_name = 'PayPlanner',
+            app_icon = 'icons/icon1.ico'
         )
 
 
