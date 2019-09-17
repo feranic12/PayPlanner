@@ -1,5 +1,5 @@
 from plyer import notification
-from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, QWidget, QTableWidget,QTableWidgetItem
+from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, QVBoxLayout,QHBoxLayout, QWidget, QTableWidget,QTableWidgetItem, QPushButton
 from PyQt5.QtCore import QSize, Qt
 import sys
 
@@ -7,41 +7,33 @@ import sys
 class MyApp(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setMinimumSize(QSize(480, 80))  # Устанавливаем размеры
-        self.setWindowTitle("Работа с QTableWidget")  # Устанавливаем заголовок окна
-        central_widget = QWidget(self)  # Создаём центральный виджет
-        self.setCentralWidget(central_widget)  # Устанавливаем центральный виджет
+        self.setMinimumSize(QSize(895, 400))
+        self.setWindowTitle("Подписчик")
+        central_widget = QWidget()
+        self.setCentralWidget(central_widget)
+        vbox = QVBoxLayout()
+        central_widget.setLayout(vbox)
+        table = QTableWidget(self)
+        table.setColumnCount(7)
+        table.setRowCount(10)
+        headers=["Название сервиса", "Состояние подписки", "Банк карты", "Номер карты", "Срок окончания",
+                 "Период продления", "Сумма"]
+        table.setHorizontalHeaderLabels(headers)
+        for x in range(table.columnCount()-1):
+            table.horizontalHeaderItem(x).setTextAlignment(Qt.AlignCenter)
+            table.setColumnWidth(x,125)
+        button1 = QPushButton()
+        button1.setText("Сохранить")
+        button2 = QPushButton()
+        button2.setText("Уведомление")
+        # button1.clicked.connect()
+        button2.clicked.connect(self.send_notification)
 
-        grid_layout = QGridLayout()  # Создаём QGridLayout
-        central_widget.setLayout(grid_layout)  # Устанавливаем данное размещение в центральный виджет
-
-        table = QTableWidget(self)  # Создаём таблицу
-        table.setColumnCount(3)  # Устанавливаем три колонки
-        table.setRowCount(1)  # и одну строку в таблице
-
-        # Устанавливаем заголовки таблицы
-        table.setHorizontalHeaderLabels(["Header 1", "Header 2", "Header 3"])
-
-        # Устанавливаем всплывающие подсказки на заголовки
-        table.horizontalHeaderItem(0).setToolTip("Column 1 ")
-        table.horizontalHeaderItem(1).setToolTip("Column 2 ")
-        table.horizontalHeaderItem(2).setToolTip("Column 3 ")
-
-        # Устанавливаем выравнивание на заголовки
-        table.horizontalHeaderItem(0).setTextAlignment(Qt.AlignLeft)
-        table.horizontalHeaderItem(1).setTextAlignment(Qt.AlignHCenter)
-        table.horizontalHeaderItem(2).setTextAlignment(Qt.AlignRight)
-
-        # заполняем первую строку
-        table.setItem(0, 0, QTableWidgetItem("Text in column 1"))
-        table.setItem(0, 1, QTableWidgetItem("Text in column 2"))
-        table.setItem(0, 2, QTableWidgetItem("Text in column 3"))
-
-        # делаем ресайз колонок по содержимому
-        table.resizeColumnsToContents()
-
-        grid_layout.addWidget(table, 0, 0)  # Добавляем таблицу в сетку
-
+        vbox.addWidget(table)
+        hbox = QHBoxLayout()
+        hbox.addWidget(button1)
+        hbox.addWidget(button2)
+        vbox.addLayout(hbox)
 
     def send_notification(self):
         notification.notify(
