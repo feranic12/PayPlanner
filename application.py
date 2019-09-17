@@ -7,32 +7,36 @@ import sys
 class MyApp(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setMinimumSize(QSize(895, 400))
+        self.setMinimumSize(QSize(955, 400))
         self.setWindowTitle("Подписчик")
-        central_widget = QWidget()
-        self.setCentralWidget(central_widget)
+        self.central_widget = QWidget()
+        self.setCentralWidget(self.central_widget)
         vbox = QVBoxLayout()
-        central_widget.setLayout(vbox)
-        table = QTableWidget(self)
-        table.setColumnCount(7)
-        table.setRowCount(10)
+        self.central_widget.setLayout(vbox)
+        self.table = QTableWidget(self)
+        self.table.setColumnCount(7)
+        self.table.setRowCount(10)
         headers=["Название сервиса", "Состояние подписки", "Банк карты", "Номер карты", "Срок окончания",
                  "Период продления", "Сумма"]
-        table.setHorizontalHeaderLabels(headers)
-        for x in range(table.columnCount()-1):
-            table.horizontalHeaderItem(x).setTextAlignment(Qt.AlignCenter)
-            table.setColumnWidth(x,125)
-        button1 = QPushButton()
-        button1.setText("Сохранить")
-        button2 = QPushButton()
-        button2.setText("Уведомление")
-        # button1.clicked.connect()
-        button2.clicked.connect(self.send_notification)
+        self.table.setHorizontalHeaderLabels(headers)
+        for x in range(self.table.columnCount()):
+            self.table.horizontalHeaderItem(x).setTextAlignment(Qt.AlignCenter)
+            self.table.setColumnWidth(x,130)
+        for row in range(self.table.rowCount()):
+            for col in range(self.table.columnCount()):
+                cellinfo = QTableWidgetItem("Dookie")
+                self.table.setItem(row, col, cellinfo)
+        self.button1 = QPushButton()
+        self.button1.setText("Редактировать")
+        self.button2 = QPushButton()
+        self.button2.setText("Уведомление")
+        self.button1.clicked.connect(self.switch_readonly)
+        self.button2.clicked.connect(self.send_notification)
 
-        vbox.addWidget(table)
+        vbox.addWidget(self.table)
         hbox = QHBoxLayout()
-        hbox.addWidget(button1)
-        hbox.addWidget(button2)
+        hbox.addWidget(self.button1)
+        hbox.addWidget(self.button2)
         vbox.addLayout(hbox)
 
     def send_notification(self):
@@ -43,5 +47,10 @@ class MyApp(QMainWindow):
             app_icon = 'icons/icon1.ico'
         )
 
-
+    def switch_readonly(self):
+        for row in range(self.table.rowCount()):
+            for col in range(self.table.columnCount()):
+                cellinfo = QTableWidgetItem("UngaBunga")
+                cellinfo.setFlags(Qt.ItemIsSelectable|Qt.ItemIsEditable)
+                self.table.setItem(row, col, cellinfo)
 
