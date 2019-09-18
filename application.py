@@ -1,7 +1,7 @@
 from plyer import notification
 from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, QVBoxLayout,QHBoxLayout, QWidget, QTableWidget,QTableWidgetItem, QPushButton
 from PyQt5.QtCore import QSize, Qt
-import sys
+import sys, db
 
 
 class MyApp(QMainWindow):
@@ -27,10 +27,10 @@ class MyApp(QMainWindow):
                 cellinfo = QTableWidgetItem("Dookie")
                 self.table.setItem(row, col, cellinfo)
         self.button1 = QPushButton()
-        self.button1.setText("Редактировать")
+        self.button1.setText("Загрузить")
         self.button2 = QPushButton()
         self.button2.setText("Уведомление")
-        self.button1.clicked.connect(self.switch_readonly)
+        self.button1.clicked.connect(self.load_from_file)
         self.button2.clicked.connect(self.send_notification)
 
         vbox.addWidget(self.table)
@@ -47,10 +47,13 @@ class MyApp(QMainWindow):
             app_icon = 'icons/icon1.ico'
         )
 
-    def switch_readonly(self):
-        for row in range(self.table.rowCount()):
-            for col in range(self.table.columnCount()):
-                cellinfo = QTableWidgetItem("UngaBunga")
-                cellinfo.setFlags(Qt.ItemIsSelectable|Qt.ItemIsEditable)
-                self.table.setItem(row, col, cellinfo)
+    def save_to_file(self): pass
+
+    def load_from_file(self):
+        db_driver = db.DB()
+        row1 = db_driver.get_all_rows()
+        for col in range(self.table.columnCount()):
+            self.table.setItem(0, col, row1[col])
+        db_driver.quit()
+
 
