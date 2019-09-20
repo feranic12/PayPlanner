@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, QVBoxLayout,
 from PyQt5.QtCore import QSize, Qt
 import sys, db
 from datetime import date, timedelta
+import widget_add
 
 
 class MyApp(QMainWindow):
@@ -23,11 +24,6 @@ class MyApp(QMainWindow):
         for x in range(self.table.columnCount()):
             self.table.horizontalHeaderItem(x).setTextAlignment(Qt.AlignCenter)
             self.table.setColumnWidth(x,130)
-            for row in range(self.table.rowCount()):
-                for col in range(self.table.columnCount()):
-                    cellinfo = QTableWidgetItem("")
-                    cellinfo.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
-                    self.table.setItem(row, col, cellinfo)
 
         self.button1 = QPushButton()
         self.button1.setText("Добавить")
@@ -37,6 +33,10 @@ class MyApp(QMainWindow):
         self.button3.setText("Удалить")
         self.button4 = QPushButton()
         self.button4.setText("Уведомление")
+
+        self.add_form = AddForm()
+        self.button1.clicked.connect(self.add_form.show)
+        self.button2.clicked.connect(self.edit_selected)
         self.button4.clicked.connect(self.send_notification)
 
         vbox.addWidget(self.table)
@@ -48,6 +48,14 @@ class MyApp(QMainWindow):
         vbox.addLayout(hbox)
 
         self.load_from_file()
+        self.set_readonly()
+
+    def set_readonly(self):
+        for row in range(self.table.rowCount()):
+            for col in range(self.table.columnCount()):
+                cellinfo = QTableWidgetItem(self.table.item(row,col))
+                cellinfo.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
+                self.table.setItem(row, col, cellinfo)
 
     def send_notification(self):
         notification.notify(
@@ -64,5 +72,18 @@ class MyApp(QMainWindow):
             cellinfo = QTableWidgetItem(str(row1[col]))
             self.table.setItem(0, col, cellinfo)
         db_driver.quit()
+
+    def edit_selected(self):pass
+
+
+class AddForm(QWidget, widget_add.Ui_Form):
+    def __init__(self):
+        QWidget.__init__(self)
+        self.setupUi(self)
+        self.pushButton.clicked.connect(self.save_new_subscription)
+
+
+
+    def save_new_subscription(self):pass
 
 

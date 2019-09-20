@@ -11,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(351, 234)
+        Form.resize(351, 278)
         self.label = QtWidgets.QLabel(Form)
         self.label.setGeometry(QtCore.QRect(20, 10, 111, 21))
         self.label.setObjectName("label")
@@ -43,6 +43,9 @@ class Ui_Form(object):
         self.comboBox_2 = QtWidgets.QComboBox(Form)
         self.comboBox_2.setGeometry(QtCore.QRect(20, 110, 171, 31))
         self.comboBox_2.setObjectName("comboBox_2")
+        self.pushButton = QtWidgets.QPushButton(Form)
+        self.pushButton.setGeometry(QtCore.QRect(260, 230, 75, 31))
+        self.pushButton.setObjectName("pushButton")
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -55,4 +58,5 @@ class Ui_Form(object):
         self.label_3.setText(_translate("Form", " Срок продления"))
         self.label_4.setText(_translate("Form", "Сумма списания:"))
         self.label_5.setText(_translate("Form", " Срок окончания:"))
+        self.pushButton.setText(_translate("Form", "Сохранить"))
 
