@@ -11,14 +11,14 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Добавить подписку</string>
   </property>
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
      <x>20</x>
      <y>10</y>
-     <width>111</width>
+     <width>131</width>
      <height>21</height>
     </rect>
    </property>
@@ -41,7 +41,7 @@
     <rect>
      <x>20</x>
      <y>150</y>
-     <width>141</width>
+     <width>121</width>
      <height>21</height>
     </rect>
    </property>
@@ -64,7 +64,7 @@
     <rect>
      <x>20</x>
      <y>80</y>
-     <width>101</width>
+     <width>111</width>
      <height>21</height>
     </rect>
    </property>
@@ -94,7 +94,7 @@
     <rect>
      <x>230</x>
      <y>150</y>
-     <width>91</width>
+     <width>111</width>
      <height>21</height>
     </rect>
    </property>
@@ -117,7 +117,7 @@
     <rect>
      <x>230</x>
      <y>80</y>
-     <width>91</width>
+     <width>111</width>
      <height>21</height>
     </rect>
    </property>
