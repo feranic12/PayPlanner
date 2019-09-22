@@ -16,7 +16,7 @@ class DB:
             print("Ошибка работы с базой данных"+ err)
         else:
             print ("Успех")
-            result = cur.fetchone()
+            result = cur.fetchall()
             self.con.commit()
             cur.close()
             return result
@@ -50,7 +50,14 @@ class DB:
         cur.close()
         return result
 
-    def add_subscription_to_db(self):pass
+    def add_subscription_to_db(self, t):
+        cur = self.con.cursor()
+        try:
+            cur.execute("insert into subscriptions values(?,?,?,?,?,?)", [t[0], t[1], t[2], t[3], t[4], t[5]])
+        except sqlite3.DatabaseError as err:
+            print("Ошибка работы с базой данных" + err)
+        self.con.commit()
+        cur.close()
 
     def __del__(self):
         self.con.close()

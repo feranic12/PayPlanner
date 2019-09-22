@@ -67,10 +67,11 @@ class MyApp(QMainWindow):
         )
 
     def load_from_file(self):
-        row1 = self.db_driver.get_all_subscriptions()
-        for col in range(self.table.columnCount()):
-            cellinfo = QTableWidgetItem(str(row1[col]))
-            self.table.setItem(0, col, cellinfo)
+        all_rows = self.db_driver.get_all_subscriptions()
+        for row in range(all_rows.__len__()):
+            for col in range(self.table.columnCount()):
+                cellinfo = QTableWidgetItem(str(all_rows[row][col]))
+                self.table.setItem(row, col, cellinfo)
 
     def edit_selected(self):pass
 
