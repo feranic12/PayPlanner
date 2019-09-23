@@ -6,6 +6,14 @@ class DB:
     def __init__(self):
         self.con = sqlite3.connect("pay_planner_db.db")
 
+    def get_subs_count(self):
+        cur = self.con.cursor()
+        cur.execute("select count(*) from subscriptions")
+        result = cur.fetchone()[0]
+        self.con.commit()
+        cur.close()
+        return result
+
     def get_all_subscriptions(self):
         cur = self.con.cursor()
         sql = """select s.service_name, st.name,bc.bank,bc.pay_system, bc.number,d.duration,

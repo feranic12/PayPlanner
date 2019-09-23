@@ -18,7 +18,7 @@ class MyApp(QMainWindow):
         self.central_widget.setLayout(vbox)
         self.table = QTableWidget(self)
         self.table.setColumnCount(8)
-        self.table.setRowCount(10)
+        self.table.setRowCount(self.db_driver.get_subs_count())
         headers = ["Название сервиса", "Состояние подписки", "Банк карты", "Платежная система", "Номер карты",
                    "Период продления","Сумма","Срок окончания"]
         self.table.setHorizontalHeaderLabels(headers)

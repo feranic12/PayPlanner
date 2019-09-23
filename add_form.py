@@ -33,6 +33,7 @@ class AddForm(QWidget, Ui_Form):
             price = self.textEdit_2.toPlainText()
             tuple_to_add = (service_name, state_id, card_id, duration_id, price, term_end_str)
             self.app.db_driver.add_subscription_to_db(tuple_to_add)
+            self.app.table.setRowCount(self.app.table.rowCount()+1)
             self.app.load_from_file()
             self.clear()
             self.close()
