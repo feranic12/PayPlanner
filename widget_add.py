@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widget_add.ui'
 #
-# Created by: PyQt5 UI code generator 5.10.1
+# Created by: PyQt5 UI code generator 5.11.3
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -25,7 +25,7 @@ class Ui_Form(object):
         self.comboBox.setGeometry(QtCore.QRect(20, 180, 201, 31))
         self.comboBox.setObjectName("comboBox")
         self.label_3 = QtWidgets.QLabel(Form)
-        self.label_3.setGeometry(QtCore.QRect(20, 80, 111, 21))
+        self.label_3.setGeometry(QtCore.QRect(130, 80, 101, 21))
         self.label_3.setObjectName("label_3")
         self.dateEdit = QtWidgets.QDateEdit(Form)
         self.dateEdit.setGeometry(QtCore.QRect(240, 110, 91, 31))
@@ -38,14 +38,20 @@ class Ui_Form(object):
         self.textEdit_2.setGeometry(QtCore.QRect(240, 180, 91, 31))
         self.textEdit_2.setObjectName("textEdit_2")
         self.label_5 = QtWidgets.QLabel(Form)
-        self.label_5.setGeometry(QtCore.QRect(230, 80, 111, 21))
+        self.label_5.setGeometry(QtCore.QRect(240, 80, 101, 21))
         self.label_5.setObjectName("label_5")
         self.comboBox_2 = QtWidgets.QComboBox(Form)
-        self.comboBox_2.setGeometry(QtCore.QRect(20, 110, 201, 31))
+        self.comboBox_2.setGeometry(QtCore.QRect(130, 110, 101, 31))
         self.comboBox_2.setObjectName("comboBox_2")
         self.pushButton = QtWidgets.QPushButton(Form)
         self.pushButton.setGeometry(QtCore.QRect(260, 230, 75, 31))
         self.pushButton.setObjectName("pushButton")
+        self.comboBox_3 = QtWidgets.QComboBox(Form)
+        self.comboBox_3.setGeometry(QtCore.QRect(20, 110, 101, 31))
+        self.comboBox_3.setObjectName("comboBox_3")
+        self.label_6 = QtWidgets.QLabel(Form)
+        self.label_6.setGeometry(QtCore.QRect(20, 80, 101, 21))
+        self.label_6.setObjectName("label_6")
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -55,8 +61,9 @@ class Ui_Form(object):
         Form.setWindowTitle(_translate("Form", "Добавить подписку"))
         self.label.setText(_translate("Form", "Название подписки:"))
         self.label_2.setText(_translate("Form", "Банковская карта:"))
-        self.label_3.setText(_translate("Form", " Срок продления"))
+        self.label_3.setText(_translate("Form", " Срок продления:"))
         self.label_4.setText(_translate("Form", "Сумма списания:"))
         self.label_5.setText(_translate("Form", " Срок окончания:"))
         self.pushButton.setText(_translate("Form", "Сохранить"))
+        self.label_6.setText(_translate("Form", "Статус:"))
 

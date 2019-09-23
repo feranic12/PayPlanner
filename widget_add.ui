@@ -62,14 +62,14 @@
   <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
-     <x>20</x>
+     <x>130</x>
      <y>80</y>
-     <width>111</width>
+     <width>101</width>
      <height>21</height>
     </rect>
    </property>
    <property name="text">
-    <string> Срок продления</string>
+    <string> Срок продления:</string>
    </property>
   </widget>
   <widget class="QDateEdit" name="dateEdit">
@@ -115,9 +115,9 @@
   <widget class="QLabel" name="label_5">
    <property name="geometry">
     <rect>
-     <x>230</x>
+     <x>240</x>
      <y>80</y>
-     <width>111</width>
+     <width>101</width>
      <height>21</height>
     </rect>
    </property>
@@ -128,9 +128,9 @@
   <widget class="QComboBox" name="comboBox_2">
    <property name="geometry">
     <rect>
-     <x>20</x>
+     <x>130</x>
      <y>110</y>
-     <width>201</width>
+     <width>101</width>
      <height>31</height>
     </rect>
    </property>
@@ -146,6 +146,29 @@
    </property>
    <property name="text">
     <string>Сохранить</string>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="comboBox_3">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>110</y>
+     <width>101</width>
+     <height>31</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_6">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>80</y>
+     <width>101</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Статус:</string>
    </property>
   </widget>
  </widget>

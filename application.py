@@ -10,17 +10,17 @@ class MyApp(QMainWindow):
     def __init__(self):
         super().__init__()
         self.db_driver = db.DB()
-        self.setMinimumSize(QSize(1200, 450))
+        self.setMinimumSize(QSize(1325, 450))
         self.setWindowTitle("Подписчик")
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
         vbox = QVBoxLayout()
         self.central_widget.setLayout(vbox)
         self.table = QTableWidget(self)
-        self.table.setColumnCount(7)
+        self.table.setColumnCount(8)
         self.table.setRowCount(10)
-        headers=["Название сервиса", "Состояние подписки", "Банк карты", "Номер карты", "Срок окончания",
-                 "Период продления", "Сумма"]
+        headers = ["Название сервиса", "Состояние подписки", "Банк карты", "Платежная система", "Номер карты",
+                   "Период продления","Сумма","Срок окончания"]
         self.table.setHorizontalHeaderLabels(headers)
         for x in range(self.table.columnCount()):
             self.table.horizontalHeaderItem(x).setTextAlignment(Qt.AlignCenter)
@@ -35,7 +35,8 @@ class MyApp(QMainWindow):
         self.button4 = QPushButton()
         self.button4.setText("Уведомление")
 
-        self.add_form = add_form.AddForm(self.db_driver)
+        self.add_form = add_form.AddForm(self)
+
         self.button1.clicked.connect(self.add_form.show)
         self.button2.clicked.connect(self.edit_selected)
         self.button4.clicked.connect(self.send_notification)
@@ -73,7 +74,9 @@ class MyApp(QMainWindow):
                 cellinfo = QTableWidgetItem(str(all_rows[row][col]))
                 self.table.setItem(row, col, cellinfo)
 
-    def edit_selected(self):pass
+    def edit_selected(self):
+        row_num = self.table.currentRow()
+        pass
 
 
 
