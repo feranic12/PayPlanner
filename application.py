@@ -37,7 +37,6 @@ class MyApp(QMainWindow):
         self.button4.setText("Уведомление")
 
         self.add_form = AddForm(self)
-        self.edit_form = EditForm(self)
 
         self.button1.clicked.connect(self.add_new_subscription)
         self.button2.clicked.connect(self.edit_selected)
@@ -83,13 +82,8 @@ class MyApp(QMainWindow):
     def edit_selected(self):
         row_num = self.table.currentRow()
         edit_tuple = self.db_driver.get_current_sub(row_num)
-        self.edit_form.textEdit.setText(edit_tuple[1])
-        self.edit_form.comboBox_3.setCurrentIndex(edit_tuple[2])
-        self.edit_form.comboBox.setCurrentIndex(edit_tuple[3])
-        self.edit_form.comboBox_2.setCurrentIndex(edit_tuple[4])
-        self.edit_form.textEdit_2.setText(str(edit_tuple[5]))
-        self.edit_form.dateEdit.setDate(QDate(int(edit_tuple[6][:4]), int(edit_tuple[6][5:7]), int(edit_tuple[6][8:10])))
-        self.edit_form.show()
+        self.edit_form = EditForm(self, edit_tuple)
+
 
 
 

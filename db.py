@@ -61,19 +61,25 @@ class DB:
         try:
             cur.execute("insert into subscriptions values(?,?,?,?,?,?,?)", [n, t[0], t[1], t[2], t[3], t[4], t[5]])
         except sqlite3.DatabaseError as err:
-            print("Ошибка работы с БД "+ err)
+            print("Ошибка работы с БД " + err)
         self.con.commit()
         cur.close()
 
     def get_current_sub(self, current_row):
         cur = self.con.cursor()
-        cur.execute("select * from subscriptions where id = ?",[current_row])
+        cur.execute("select * from subscriptions where id = ?", [current_row])
         result = cur.fetchone()
         self.con.commit()
         cur.close()
         return result
 
-    def update_sub(self, t, current_row):pass
+    def update_sub(self, t):
+        cur = self.con.cursor()
+        sql = """update subscriptions set service_name = ?, state_id = ?,
+                 card_id = ?, duration_id = ?, price = ?, term_end = ? where id = ?"""
+        cur.execute(sql,[t[1], t[2], t[3], t[4], t[5], t[6], t[0]])
+        self.con.commit()
+        cur.close()
 
     def __del__(self):
         self.con.close()
