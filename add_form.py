@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import QWidget, QMessageBox
+from PyQt5.QtCore import QDate
 from widget_add import Ui_Form
 from datetime import datetime
 
@@ -55,7 +56,7 @@ class AddForm(QWidget, Ui_Form):
         self.comboBox.setCurrentIndex(0)
         self.comboBox_2.setCurrentIndex(0)
         self.comboBox_3.setCurrentIndex(0)
-        self.dateEdit.date = "01.01.2020"
+        self.dateEdit.setDate(QDate(2020,1,1,))
 
 
 
