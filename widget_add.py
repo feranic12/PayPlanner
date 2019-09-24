@@ -11,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(351, 272)
+        Form.resize(356, 277)
         self.label = QtWidgets.QLabel(Form)
         self.label.setGeometry(QtCore.QRect(20, 10, 131, 21))
         self.label.setObjectName("label")
@@ -19,10 +19,10 @@ class Ui_Form(object):
         self.textEdit.setGeometry(QtCore.QRect(20, 40, 311, 31))
         self.textEdit.setObjectName("textEdit")
         self.label_2 = QtWidgets.QLabel(Form)
-        self.label_2.setGeometry(QtCore.QRect(20, 150, 121, 21))
+        self.label_2.setGeometry(QtCore.QRect(20, 150, 111, 21))
         self.label_2.setObjectName("label_2")
         self.comboBox = QtWidgets.QComboBox(Form)
-        self.comboBox.setGeometry(QtCore.QRect(20, 180, 201, 31))
+        self.comboBox.setGeometry(QtCore.QRect(20, 180, 211, 31))
         self.comboBox.setObjectName("comboBox")
         self.label_3 = QtWidgets.QLabel(Form)
         self.label_3.setGeometry(QtCore.QRect(130, 80, 101, 21))
@@ -32,7 +32,7 @@ class Ui_Form(object):
         self.dateEdit.setDate(QtCore.QDate(2020, 1, 1))
         self.dateEdit.setObjectName("dateEdit")
         self.label_4 = QtWidgets.QLabel(Form)
-        self.label_4.setGeometry(QtCore.QRect(230, 150, 111, 21))
+        self.label_4.setGeometry(QtCore.QRect(240, 150, 101, 21))
         self.label_4.setObjectName("label_4")
         self.textEdit_2 = QtWidgets.QTextEdit(Form)
         self.textEdit_2.setGeometry(QtCore.QRect(240, 180, 91, 31))
@@ -66,4 +66,5 @@ class Ui_Form(object):
         self.label_5.setText(_translate("Form", " Срок окончания:"))
         self.pushButton.setText(_translate("Form", "Сохранить"))
         self.label_6.setText(_translate("Form", "Статус:"))
+
 

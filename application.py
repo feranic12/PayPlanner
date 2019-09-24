@@ -1,9 +1,10 @@
 from plyer import notification
 from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, QVBoxLayout,QHBoxLayout, QWidget, QTableWidget,QTableWidgetItem, QPushButton
-from PyQt5.QtCore import QSize, Qt
+from PyQt5.QtCore import QSize, Qt, QDate
 import sys, db
 from datetime import date, timedelta
-import add_form
+from add_form import AddForm
+from edit_form import EditForm
 
 
 class MyApp(QMainWindow):
@@ -35,11 +36,13 @@ class MyApp(QMainWindow):
         self.button4 = QPushButton()
         self.button4.setText("Уведомление")
 
-        self.add_form = add_form.AddForm(self)
+        self.add_form = AddForm(self)
+        self.edit_form = EditForm(self)
 
-        self.button1.clicked.connect(self.add_form.show)
+        self.button1.clicked.connect(self.add_new_subscription)
         self.button2.clicked.connect(self.edit_selected)
         self.button4.clicked.connect(self.send_notification)
+        self.table.doubleClicked.connect(self.edit_selected)
 
         vbox.addWidget(self.table)
         hbox = QHBoxLayout()
@@ -74,9 +77,19 @@ class MyApp(QMainWindow):
                 cellinfo = QTableWidgetItem(str(all_rows[row][col]))
                 self.table.setItem(row, col, cellinfo)
 
+    def add_new_subscription(self):
+        self.add_form.show()
+
     def edit_selected(self):
         row_num = self.table.currentRow()
-        pass
+        edit_tuple = self.db_driver.get_current_sub(row_num)
+        self.edit_form.textEdit.setText(edit_tuple[1])
+        self.edit_form.comboBox_3.setCurrentIndex(edit_tuple[2])
+        self.edit_form.comboBox.setCurrentIndex(edit_tuple[3])
+        self.edit_form.comboBox_2.setCurrentIndex(edit_tuple[4])
+        self.edit_form.textEdit_2.setText(str(edit_tuple[5]))
+        self.edit_form.dateEdit.setDate(QDate(int(edit_tuple[6][:4]), int(edit_tuple[6][5:7]), int(edit_tuple[6][8:10])))
+        self.edit_form.show()
 
 
 

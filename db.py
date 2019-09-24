@@ -60,10 +60,20 @@ class DB:
         self.con.commit()
         try:
             cur.execute("insert into subscriptions values(?,?,?,?,?,?,?)", [n, t[0], t[1], t[2], t[3], t[4], t[5]])
-        except sqlite3.DatabaseErrori as err:
+        except sqlite3.DatabaseError as err:
             print("Ошибка работы с БД "+ err)
         self.con.commit()
         cur.close()
+
+    def get_current_sub(self, current_row):
+        cur = self.con.cursor()
+        cur.execute("select * from subscriptions where id = ?",[current_row])
+        result = cur.fetchone()
+        self.con.commit()
+        cur.close()
+        return result
+
+    def update_sub(self, t, current_row):pass
 
     def __del__(self):
         self.con.close()

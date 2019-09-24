@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>351</width>
-    <height>272</height>
+    <width>356</width>
+    <height>277</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,7 @@
     <rect>
      <x>20</x>
      <y>10</y>
-     <width>131</width>
+     <width>111</width>
      <height>21</height>
     </rect>
    </property>
@@ -41,7 +41,7 @@
     <rect>
      <x>20</x>
      <y>150</y>
-     <width>121</width>
+     <width>111</width>
      <height>21</height>
     </rect>
    </property>
@@ -54,7 +54,7 @@
     <rect>
      <x>20</x>
      <y>180</y>
-     <width>201</width>
+     <width>211</width>
      <height>31</height>
     </rect>
    </property>
@@ -92,9 +92,9 @@
   <widget class="QLabel" name="label_4">
    <property name="geometry">
     <rect>
-     <x>230</x>
+     <x>240</x>
      <y>150</y>
-     <width>111</width>
+     <width>101</width>
      <height>21</height>
     </rect>
    </property>
@@ -169,6 +169,32 @@
    </property>
    <property name="text">
     <string>Статус:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_7">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>220</y>
+     <width>91</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Номер подписки:</string>
+   </property>
+  </widget>
+  <widget class="QTextEdit" name="textEdit_3">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>220</y>
+     <width>31</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="readOnly">
+    <bool>true</bool>
    </property>
   </widget>
  </widget>
