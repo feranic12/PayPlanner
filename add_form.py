@@ -22,11 +22,10 @@ class AddForm(QWidget, Ui_Form, BaseForm):
             term_end_str = term_end.strftime("%Y,%m,%d")
             duration_id = self.comboBox_2.currentIndex()
             price = self.textEdit_2.toPlainText()
-            tuple_to_add = (service_name, state_id, card_id, duration_id, price, term_end_str)
+            tuple_to_add = (service_name, state_id, card_id, duration_id, float(price), term_end_str)
             self.app.db_driver.add_subscription_to_db(tuple_to_add)
             self.app.table.setRowCount(self.app.table.rowCount() + 1)
             self.app.load_from_file()
-            self.clear()
             self.close()
 
     def check_form(self):
@@ -39,14 +38,6 @@ class AddForm(QWidget, Ui_Form, BaseForm):
             return False
         else:
             return True
-
-    def clear(self):
-        self.textEdit.clear()
-        self.textEdit_2.clear()
-        self.comboBox.setCurrentIndex(0)
-        self.comboBox_2.setCurrentIndex(0)
-        self.comboBox_3.setCurrentIndex(0)
-        self.dateEdit.setDate(QDate(2020, 1, 1))
 
 
 

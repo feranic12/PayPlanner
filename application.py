@@ -1,5 +1,5 @@
 from plyer import notification
-from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, QVBoxLayout,QHBoxLayout, QWidget, QTableWidget,QTableWidgetItem, QPushButton
+from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, QVBoxLayout,QHBoxLayout, QWidget, QTableWidget,QTableWidgetItem, QPushButton, QMessageBox
 from PyQt5.QtCore import QSize, Qt, QDate
 import sys, db
 from datetime import date, timedelta
@@ -36,10 +36,9 @@ class MyApp(QMainWindow):
         self.button4 = QPushButton()
         self.button4.setText("Уведомление")
 
-        self.add_form = AddForm(self)
-
         self.button1.clicked.connect(self.add_new_subscription)
         self.button2.clicked.connect(self.edit_selected)
+        self.button3.clicked.connect(self.delete_subscription)
         self.button4.clicked.connect(self.send_notification)
         self.table.doubleClicked.connect(self.edit_selected)
 
@@ -70,21 +69,30 @@ class MyApp(QMainWindow):
         )
 
     def load_from_file(self):
-        all_rows = self.db_driver.get_all_subscriptions()
-        for row in range(all_rows.__len__()):
+        self.table.clear()
+        subs_for_table = self.db_driver.get_subs_for_table()
+        for row in range(subs_for_table.__len__()):
             for col in range(self.table.columnCount()):
-                cellinfo = QTableWidgetItem(str(all_rows[row][col]))
+                cellinfo = QTableWidgetItem(str(subs_for_table[row][col]))
                 self.table.setItem(row, col, cellinfo)
 
     def add_new_subscription(self):
+        self.add_form = AddForm(self)
         self.add_form.show()
+
 
     def edit_selected(self):
         row_num = self.table.currentRow()
-        edit_tuple = self.db_driver.get_current_sub(row_num)
-        self.edit_form = EditForm(self, edit_tuple)
+        sub = self.db_driver.get_all_subscriptions()[row_num]
+        self.edit_form = EditForm(self, sub)
+        self.edit_form.show()
 
-
+    def delete_subscription(self):
+        row_num = self.table.currentRow()
+        id = self.db_driver.get_all_subscriptions()[row_num][0]
+        self.db_driver.delete_sub(id)
+        self.table.setRowCount(self.table.rowCount() - 1)
+        self.load_from_file()
 
 
 

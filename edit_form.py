@@ -21,7 +21,6 @@ class EditForm(QWidget, Ui_Form, BaseForm):
         self.textEdit_2.setText(str(t[5]))
         self.dateEdit.setDate(
             QDate(int(t[6][:4]), int(t[6][5:7]), int(t[6][8:10])))
-        self.show()
 
     def update_subscription(self):
         t = self.t
