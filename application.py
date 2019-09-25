@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, QVBoxLayout,
 from PyQt5.QtCore import QSize, Qt, QDate
 import sys, db
 from datetime import date, timedelta
+from time import strptime
 from add_form import AddForm
 from edit_form import EditForm
 
@@ -39,7 +40,7 @@ class MyApp(QMainWindow):
         self.button1.clicked.connect(self.add_new_subscription)
         self.button2.clicked.connect(self.edit_selected)
         self.button3.clicked.connect(self.delete_subscription)
-        self.button4.clicked.connect(self.send_notification)
+        self.button4.clicked.connect(self.send_test_notification)
         self.table.doubleClicked.connect(self.edit_selected)
 
         vbox.addWidget(self.table)
@@ -51,7 +52,9 @@ class MyApp(QMainWindow):
         vbox.addLayout(hbox)
 
         self.load_from_file()
+        self.subscriptions = self.db_driver.get_all_subscriptions()
         self.set_readonly()
+        self.check_updates()
 
     def set_readonly(self):
         for row in range(self.table.rowCount()):
@@ -60,12 +63,28 @@ class MyApp(QMainWindow):
                 cellinfo.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
                 self.table.setItem(row, col, cellinfo)
 
-    def send_notification(self):
+    def check_updates(self):
+        for sub in self.subscriptions:
+            if sub[6] == date.today().strftime("%Y,%m,%d"):
+                self.send_notification(sub)
+
+    def send_notification(self, sub):
+        for bc in self.db_driver.get_all_bank_cards():
+            if (bc[0] == sub[3]):
+                card_str = bc[3] + ' ' + bc[1][-4:]
         notification.notify(
-            title = 'Мое уведомление',
-            message = 'Система уведомляет Вас о бренности бытия.',
-            app_name = 'PayPlanner',
-            app_icon = 'icons/icon1.ico'
+            title='ПОДПИСЧИК',
+            message='Сегодня срок продления подписки ' + sub[1] + ' . Будет списано ' + str(sub[5]) + ' рублей. Сумма будет списана со счета ' + card_str,
+            app_name='PayPlanner',
+            app_icon='icons/icon1.ico'
+        )
+
+    def send_test_notification(self):
+        notification.notify(
+            title='ПОДПИСЧИК',
+            message='Система уведомляет Вас о скором постепенном наступлении Эры Водолея!',
+            app_name='PayPlanner',
+            app_icon='icons/icon1.ico'
         )
 
     def load_from_file(self):
@@ -79,7 +98,6 @@ class MyApp(QMainWindow):
     def add_new_subscription(self):
         self.add_form = AddForm(self)
         self.add_form.show()
-
 
     def edit_selected(self):
         row_num = self.table.currentRow()
