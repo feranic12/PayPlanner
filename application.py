@@ -2,8 +2,8 @@ from plyer import notification
 from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, QVBoxLayout,QHBoxLayout, QWidget, QTableWidget,QTableWidgetItem, QPushButton, QMessageBox
 from PyQt5.QtCore import QSize, Qt, QDate
 import sys, db
-from datetime import date, timedelta
-from time import strptime
+from datetime import datetime, date
+from time import strptime, mktime
 from add_form import AddForm
 from edit_form import EditForm
 
@@ -50,11 +50,10 @@ class MyApp(QMainWindow):
         hbox.addWidget(self.button3)
         hbox.addWidget(self.button4)
         vbox.addLayout(hbox)
-
-        self.load_from_file()
         self.subscriptions = self.db_driver.get_all_subscriptions()
-        self.set_readonly()
         self.check_updates()
+        self.load_from_file()
+        self.set_readonly()
 
     def set_readonly(self):
         for row in range(self.table.rowCount()):
@@ -65,12 +64,25 @@ class MyApp(QMainWindow):
 
     def check_updates(self):
         for sub in self.subscriptions:
-            if sub[6] == date.today().strftime("%Y,%m,%d"):
+            sub_list = list(sub)
+            end_date = datetime.fromtimestamp(mktime(strptime(sub_list[6], "%Y,%m,%d")))
+            new_end_date = None
+            if end_date <= datetime.today():
                 self.send_notification(sub)
+                #ежемесячная подписка
+                if sub_list[4] == 0:
+                    if end_date.month == 12:
+                        new_end_date = datetime(end_date.year+1, 1, end_date.day)
+                    else:
+                        new_end_date = datetime(end_date.year,end_date.month+1,end_date.day)
+                #ежегодная подписка
+                elif sub_list[4] == 1:
+                    new_end_date = date(end_date.year+1, end_date.month, end_date.day)
+                self.db_driver.update_end_date(sub[0], new_end_date)
 
     def send_notification(self, sub):
         for bc in self.db_driver.get_all_bank_cards():
-            if (bc[0] == sub[3]):
+            if bc[0] == sub[3]:
                 card_str = bc[3] + ' ' + bc[1][-4:]
         notification.notify(
             title='ПОДПИСЧИК',

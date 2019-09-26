@@ -95,5 +95,11 @@ class DB:
         self.con.commit()
         cur.close()
 
+    def update_end_date(self, id, date):
+        cur = self.con.cursor()
+        cur.execute("update subscriptions set term_end = ? where id = ?", [date, id])
+        self.con.commit()
+        cur.close()
+
     def __del__(self):
         self.con.close()
