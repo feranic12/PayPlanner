@@ -32,7 +32,7 @@ class EditForm(QWidget, Ui_Form, BaseForm):
         result_tuple.append(self.comboBox_2.currentIndex())
         result_tuple.append(self.textEdit_2.toPlainText())
         res_date = self.dateEdit.date().toPyDate()
-        result_tuple.append(res_date.strftime("%Y,%m,%d"))
+        result_tuple.append(res_date.strftime("%Y-%m-%d"))
         self.app.db_driver.update_sub(result_tuple)
         self.app.load_from_file()
         self.close()

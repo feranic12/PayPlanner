@@ -19,7 +19,7 @@ class AddForm(QWidget, Ui_Form, BaseForm):
             state_id = self.comboBox_3.currentIndex()
             card_id = self.comboBox.currentIndex()
             term_end = self.dateEdit.date().toPyDate()
-            term_end_str = term_end.strftime("%Y,%m,%d")
+            term_end_str = term_end.strftime("%Y-%m-%d")
             duration_id = self.comboBox_2.currentIndex()
             price = self.textEdit_2.toPlainText()
             tuple_to_add = (service_name, state_id, card_id, duration_id, float(price), term_end_str)

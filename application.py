@@ -2,7 +2,7 @@ from plyer import notification
 from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, QVBoxLayout,QHBoxLayout, QWidget, QTableWidget,QTableWidgetItem, QPushButton, QMessageBox
 from PyQt5.QtCore import QSize, Qt, QDate
 import sys, db
-from datetime import datetime, date
+from datetime import date
 from time import strptime, mktime
 from add_form import AddForm
 from edit_form import EditForm
@@ -12,6 +12,7 @@ class MyApp(QMainWindow):
     def __init__(self):
         super().__init__()
         self.db_driver = db.DB()
+        self.subscriptions = self.db_driver.get_all_subscriptions()
         self.setMinimumSize(QSize(1325, 450))
         self.setWindowTitle("Подписчик")
         self.central_widget = QWidget()
@@ -35,12 +36,12 @@ class MyApp(QMainWindow):
         self.button3 = QPushButton()
         self.button3.setText("Удалить")
         self.button4 = QPushButton()
-        self.button4.setText("Уведомление")
+        self.button4.setText("Проверить")
 
         self.button1.clicked.connect(self.add_new_subscription)
         self.button2.clicked.connect(self.edit_selected)
         self.button3.clicked.connect(self.delete_subscription)
-        self.button4.clicked.connect(self.send_test_notification)
+        self.button4.clicked.connect(self.check_updates)
         self.table.doubleClicked.connect(self.edit_selected)
 
         vbox.addWidget(self.table)
@@ -50,7 +51,6 @@ class MyApp(QMainWindow):
         hbox.addWidget(self.button3)
         hbox.addWidget(self.button4)
         vbox.addLayout(hbox)
-        self.subscriptions = self.db_driver.get_all_subscriptions()
         self.check_updates()
         self.load_from_file()
         self.set_readonly()
@@ -63,22 +63,24 @@ class MyApp(QMainWindow):
                 self.table.setItem(row, col, cellinfo)
 
     def check_updates(self):
+        self.subscriptions = self.db_driver.get_all_subscriptions()
         for sub in self.subscriptions:
             sub_list = list(sub)
-            end_date = datetime.fromtimestamp(mktime(strptime(sub_list[6], "%Y,%m,%d")))
+            end_date = date.fromtimestamp(mktime(strptime(sub_list[6], "%Y-%m-%d")))
             new_end_date = None
-            if end_date <= datetime.today():
+            if end_date <= date.today():
                 self.send_notification(sub)
                 #ежемесячная подписка
                 if sub_list[4] == 0:
                     if end_date.month == 12:
-                        new_end_date = datetime(end_date.year+1, 1, end_date.day)
+                        new_end_date = date(end_date.year+1, 1, end_date.day)
                     else:
-                        new_end_date = datetime(end_date.year,end_date.month+1,end_date.day)
+                        new_end_date = date(end_date.year,end_date.month+1,end_date.day)
                 #ежегодная подписка
                 elif sub_list[4] == 1:
                     new_end_date = date(end_date.year+1, end_date.month, end_date.day)
                 self.db_driver.update_end_date(sub[0], new_end_date)
+        self.load_from_file()
 
     def send_notification(self, sub):
         for bc in self.db_driver.get_all_bank_cards():
