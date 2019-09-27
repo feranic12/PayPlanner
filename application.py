@@ -19,11 +19,11 @@ class MyApp(QMainWindow):
         self.setCentralWidget(self.central_widget)
         vbox = QVBoxLayout()
         self.central_widget.setLayout(vbox)
-        self.table = QTableWidget(self)
+        self.table = QTableWidget()
         self.table.setColumnCount(8)
-        self.table.setRowCount(self.db_driver.get_subs_count())
         headers = ["Название сервиса", "Состояние подписки", "Банк карты", "Платежная система", "Номер карты",
-                   "Период продления","Сумма","Срок окончания"]
+                   "Период продления","Сумма", "Срок окончания"]
+        self.table.setRowCount(self.db_driver.get_subs_count())
         self.table.setHorizontalHeaderLabels(headers)
         for x in range(self.table.columnCount()):
             self.table.horizontalHeaderItem(x).setTextAlignment(Qt.AlignCenter)
@@ -64,11 +64,13 @@ class MyApp(QMainWindow):
 
     def check_updates(self):
         self.subscriptions = self.db_driver.get_all_subscriptions()
+        n=0
         for sub in self.subscriptions:
             sub_list = list(sub)
             end_date = date.fromtimestamp(mktime(strptime(sub_list[6], "%Y-%m-%d")))
             new_end_date = None
             if end_date <= date.today():
+                n = n+1
                 self.send_notification(sub)
                 #ежемесячная подписка
                 if sub_list[4] == 0:
@@ -80,7 +82,14 @@ class MyApp(QMainWindow):
                 elif sub_list[4] == 1:
                     new_end_date = date(end_date.year+1, end_date.month, end_date.day)
                 self.db_driver.update_end_date(sub[0], new_end_date)
-        self.load_from_file()
+        if n>0:
+            self.load_from_file()
+        else:
+            msg = QMessageBox()
+            msg.setWindowTitle("Внимание!")
+            msg.setText("Просроченных подписок нет.")
+            msg.addButton("OK", QMessageBox.AcceptRole)
+            msg.exec()
 
     def send_notification(self, sub):
         for bc in self.db_driver.get_all_bank_cards():
@@ -88,15 +97,7 @@ class MyApp(QMainWindow):
                 card_str = bc[3] + ' ' + bc[1][-4:]
         notification.notify(
             title='ПОДПИСЧИК',
-            message='Сегодня срок продления подписки ' + sub[1] + ' . Будет списано ' + str(sub[5]) + ' рублей. Сумма будет списана со счета ' + card_str,
-            app_name='PayPlanner',
-            app_icon='icons/icon1.ico'
-        )
-
-    def send_test_notification(self):
-        notification.notify(
-            title='ПОДПИСЧИК',
-            message='Система уведомляет Вас о скором постепенном наступлении Эры Водолея!',
+            message='Истек срок продления подписки ' + sub[1] + ' . Будет списано ' + str(sub[5]) + ' рублей со счета ' + card_str,
             app_name='PayPlanner',
             app_icon='icons/icon1.ico'
         )
