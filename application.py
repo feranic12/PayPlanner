@@ -1,9 +1,10 @@
 from plyer import notification
 from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, QVBoxLayout,QHBoxLayout, QWidget, QTableWidget,QTableWidgetItem, QPushButton, QMessageBox
 from PyQt5.QtCore import QSize, Qt, QDate
+from PyQt5 import QtGui
 import sys, db
 from datetime import date
-from time import strptime, mktime
+from time import strptime, mktime, sleep
 from add_form import AddForm
 from edit_form import EditForm
 
@@ -13,7 +14,7 @@ class MyApp(QMainWindow):
         super().__init__()
         self.db_driver = db.DB()
         self.subscriptions = self.db_driver.get_all_subscriptions()
-        self.setMinimumSize(QSize(1325, 450))
+        self.setMinimumSize(QSize(1360, 450))
         self.setWindowTitle("Подписчик")
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
@@ -23,11 +24,14 @@ class MyApp(QMainWindow):
         self.table.setColumnCount(8)
         headers = ["Название сервиса", "Состояние подписки", "Банк карты", "Платежная система", "Номер карты",
                    "Период продления","Сумма", "Срок окончания"]
-        self.table.setRowCount(self.db_driver.get_subs_count())
+        self.table.setRowCount(self.db_driver.get_subs_count()+1)
         self.table.setHorizontalHeaderLabels(headers)
         for x in range(self.table.columnCount()):
             self.table.horizontalHeaderItem(x).setTextAlignment(Qt.AlignCenter)
+            self.table.horizontalHeaderItem(x).setFont(QtGui.QFont("Times", 8, QtGui.QFont.Bold))
             self.table.setColumnWidth(x,160)
+            cellinfo = QTableWidgetItem(headers[x])
+            cellinfo.setTextAlignment(Qt.AlignCenter)
 
         self.button1 = QPushButton()
         self.button1.setText("Добавить")
@@ -51,6 +55,7 @@ class MyApp(QMainWindow):
         hbox.addWidget(self.button3)
         hbox.addWidget(self.button4)
         vbox.addLayout(hbox)
+        sleep(10)
         self.check_updates()
         self.load_from_file()
         self.set_readonly()
@@ -82,14 +87,11 @@ class MyApp(QMainWindow):
                 elif sub_list[4] == 1:
                     new_end_date = date(end_date.year+1, end_date.month, end_date.day)
                 self.db_driver.update_end_date(sub[0], new_end_date)
-        if n>0:
+        if n > 0:
             self.load_from_file()
+            return True
         else:
-            msg = QMessageBox()
-            msg.setWindowTitle("Внимание!")
-            msg.setText("Просроченных подписок нет.")
-            msg.addButton("OK", QMessageBox.AcceptRole)
-            msg.exec()
+            return False
 
     def send_notification(self, sub):
         for bc in self.db_driver.get_all_bank_cards():
@@ -103,12 +105,17 @@ class MyApp(QMainWindow):
         )
 
     def load_from_file(self):
-        self.table.clear()
+        self.table.clearContents()
         subs_for_table = self.db_driver.get_subs_for_table()
         for row in range(subs_for_table.__len__()):
             for col in range(self.table.columnCount()):
                 cellinfo = QTableWidgetItem(str(subs_for_table[row][col]))
                 self.table.setItem(row, col, cellinfo)
+
+    def clear_table(self):
+        for row in range(self.table.rowCount()):
+            for col in range(self.table.columnCount()):
+                self.table.setItem(row, col, QTableWidgetItem())
 
     def add_new_subscription(self):
         self.add_form = AddForm(self)
