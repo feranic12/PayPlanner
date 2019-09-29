@@ -1,10 +1,10 @@
 from PyQt5.QtWidgets import QWidget, QMessageBox
 from PyQt5.QtCore import QDate
 from widget_add import Ui_Form
-import datetime
 from base_form import BaseForm
 
 
+# класс, представляющий форму редактирования подписки, наследующий, в т.ч. от класса, полученного в визуальном редакторе
 class EditForm(QWidget, Ui_Form, BaseForm):
     def __init__(self, app, t):
         self.app = app
@@ -22,6 +22,7 @@ class EditForm(QWidget, Ui_Form, BaseForm):
         self.dateEdit.setDate(
             QDate(int(t[6][:4]), int(t[6][5:7]), int(t[6][8:10])))
 
+    # сохранение изменений в БД
     def update_subscription(self):
         t = self.t
         result_tuple = []

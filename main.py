@@ -1,7 +1,8 @@
 from PyQt5 import QtWidgets
-import application, sys, datetime
+import application, sys
 
 
+# главная точка входа в приложение
 def main():
     app = QtWidgets.QApplication(sys.argv)
     my_main_window = application.MyApp()

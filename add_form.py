@@ -1,10 +1,9 @@
 from PyQt5.QtWidgets import QWidget, QMessageBox
-from PyQt5.QtCore import QDate
 from widget_add import Ui_Form
-from datetime import datetime
 from base_form import BaseForm
 
 
+# класс, представляющий форму добавления новой записи, наследующий, в т.ч. от класса, полученного в визуальном редакторе
 class AddForm(QWidget, Ui_Form, BaseForm):
     def __init__(self, app):
         self.app = app
@@ -13,6 +12,7 @@ class AddForm(QWidget, Ui_Form, BaseForm):
         self.pushButton.clicked.connect(self.save_new_subscription)
         self.advanced_setup()
 
+    # сохранение новой записи в БД по кнопке "Сохранить"
     def save_new_subscription(self):
         if self.check_form():
             service_name = self.textEdit.toPlainText()
@@ -28,6 +28,7 @@ class AddForm(QWidget, Ui_Form, BaseForm):
             self.app.load_from_file()
             self.close()
 
+    # проверка на заполненность обязательных полей
     def check_form(self):
         if self.textEdit.toPlainText() == "" or self.textEdit_2.toPlainText() == "":
             msg = QMessageBox()

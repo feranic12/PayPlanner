@@ -1,11 +1,12 @@
 import sqlite3
 
 
+# класс, реализующий взаимодействие с базой данных
 class DB:
-
     def __init__(self):
         self.con = sqlite3.connect("pay_planner_db.db")
 
+    # подсчет числа записей в таблице "подписки"
     def get_subs_count(self):
         cur = self.con.cursor()
         cur.execute("select count(*) from subscriptions")
@@ -14,6 +15,7 @@ class DB:
         cur.close()
         return result
 
+    # получение списка всех подписок
     def get_all_subscriptions(self):
         cur = self.con.cursor()
         cur.execute("select * from subscriptions")
@@ -22,6 +24,7 @@ class DB:
         cur.close()
         return result
 
+    # получение выборки из нескольких таблиц БД, для заполнения таблицы в главном окне
     def get_subs_for_table(self):
         cur = self.con.cursor()
         cur.execute("""select s.service_name, st.name, bc.bank, bc.pay_system, bc.number, d.duration, s.price, s.term_end 
@@ -31,6 +34,7 @@ class DB:
         self.con.commit()
         return result
 
+    # получение всех состояний для ComboBox
     def get_all_states(self):
         cur = self.con.cursor()
         sql = """select * from states"""
@@ -40,6 +44,7 @@ class DB:
         cur.close()
         return result
 
+    # получение всех длительностей для Combobox
     def get_all_durations(self):
         cur = self.con.cursor()
         sql = """select * from durations"""
@@ -49,6 +54,7 @@ class DB:
         cur.close()
         return result
 
+    # получение всех банковских карт для ComboBox
     def get_all_bank_cards(self):
         cur = self.con.cursor()
         sql = """select * from bank_cards"""
@@ -58,6 +64,7 @@ class DB:
         cur.close()
         return result
 
+    # добавление новой подписки в БД
     def add_subscription_to_db(self, t):
         cur = self.con.cursor()
         cur.execute("select max(id) from subscriptions")
@@ -70,6 +77,7 @@ class DB:
         self.con.commit()
         cur.close()
 
+    # получение текущей подписки
     def get_current_sub(self, id):
         cur = self.con.cursor()
         cur.execute("select * from subscriptions where id = ?", [id])
@@ -78,6 +86,7 @@ class DB:
         cur.close()
         return result
 
+    # обновление текущей подписки
     def update_sub(self, t):
         cur = self.con.cursor()
         sql = """update subscriptions set service_name = ?, state_id = ?,
@@ -86,6 +95,7 @@ class DB:
         self.con.commit()
         cur.close()
 
+    # удаление текущей подписки
     def delete_sub(self, id):
         cur = self.con.cursor()
         try:
@@ -95,6 +105,7 @@ class DB:
         self.con.commit()
         cur.close()
 
+    # обновление конечной даты подписки при ее продлении
     def update_end_date(self, id, date):
         cur = self.con.cursor()
         cur.execute("update subscriptions set term_end = ? where id = ?", [date, id])

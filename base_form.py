@@ -1,7 +1,6 @@
-from PyQt5 import QtCore, QtWidgets
-
-
+# базовый класс для классов EditForm и AddForm
 class BaseForm:
+    # инициализация выпадающих списков значениями из БД
     def advanced_setup(self):
         states = self.app.db_driver.get_all_states()
         for s in states:
