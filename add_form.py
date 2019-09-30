@@ -1,13 +1,13 @@
 from PyQt5.QtWidgets import QWidget, QMessageBox
-from widget_add import Ui_Form
+import widget_add
 from base_form import BaseForm
 
 
 # класс, представляющий форму добавления новой записи, наследующий, в т.ч. от класса, полученного в визуальном редакторе
-class AddForm(QWidget, Ui_Form, BaseForm):
+class AddForm(QWidget, widget_add.Ui_Form, BaseForm):
     def __init__(self, app):
-        self.app = app
         QWidget.__init__(self)
+        self.app = app
         self.setupUi(self)
         self.pushButton.clicked.connect(self.save_new_subscription)
         self.advanced_setup()

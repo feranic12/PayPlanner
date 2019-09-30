@@ -48,6 +48,7 @@ class MyApp(QMainWindow):
         self.button2.clicked.connect(self.edit_selected)
         self.button3.clicked.connect(self.delete_subscription)
         self.button4.clicked.connect(self.check_updates)
+        #self.button5.clicked.connect(self.payment_methods)
         self.table.doubleClicked.connect(self.edit_selected)
 
         vbox.addWidget(self.table)
