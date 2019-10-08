@@ -95,6 +95,7 @@ class MyApp(QMainWindow):
 
             # Отправка уведомления о продлении подписки
             if end_date <= date.today()+timedelta(1):
+                sleep(5)
                 self.send_notification(sub)
 
         # если были подписки, оканчивающиеся сегодня, перезагрузить таблицу
