@@ -26,7 +26,7 @@ class MyApp(QMainWindow):
         self.table.setColumnCount(8)
         headers = ["Название сервиса", "Состояние подписки", "Банк карты", "Платежная система", "Номер карты",
                    "Период продления","Сумма", "Срок окончания"]
-        self.table.setRowCount(self.db_driver.get_subs_count()+1)
+        self.table.setRowCount(self.db_driver.get_subs_count())
         self.table.setHorizontalHeaderLabels(headers)
         for x in range(self.table.columnCount()):
             self.table.horizontalHeaderItem(x).setTextAlignment(Qt.AlignCenter)
