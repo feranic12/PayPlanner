@@ -6,7 +6,7 @@ import application, sys
 def main():
     app = QtWidgets.QApplication(sys.argv)
     my_main_window = application.MyApp()
-    # my_main_window.show()
+    my_main_window.show()
     sys.exit(app.exec())
 
 
