@@ -78,25 +78,25 @@ class MyApp(QMainWindow):
         for sub in self.subscriptions:
             sub_list = list(sub)
             end_date = datetime.strptime(sub_list[6], "%Y-%m-%d").date()
+            if end_date <= date.today() + timedelta(1):
+                n = n + 1
+                sleep(5)
+                self.send_notification(sub)
             # увеличение даты окончания периода подписки на месяц/год
-            new_end_date = None
-            if end_date == date.today():
+            while end_date <= date.today():
                 n = n + 1
                 # ежемесячная подписка
                 if sub_list[4] == 0:
                     if end_date.month == 12:
-                        new_end_date = date(end_date.year + 1, 1, end_date.day)
+                        end_date = date(end_date.year + 1, 1, end_date.day)
                     else:
-                        new_end_date = date(end_date.year, end_date.month + 1, end_date.day)
+                        end_date = date(end_date.year, end_date.month + 1, end_date.day)
                 # ежегодная подписка
                 elif sub_list[4] == 1:
-                    new_end_date = date(end_date.year + 1, end_date.month, end_date.day)
-                self.db_driver.update_end_date(sub[0], new_end_date)
+                    end_date = date(end_date.year + 1, end_date.month, end_date.day)
+                self.db_driver.update_end_date(sub[0], end_date)
 
             # Отправка уведомления о продлении подписки
-            if end_date <= date.today()+timedelta(1):
-                sleep(5)
-                self.send_notification(sub)
 
         # если были подписки, оканчивающиеся сегодня, перезагрузить таблицу
         if n > 0:
