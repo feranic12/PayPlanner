@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, QVBoxLayout,
 from PyQt5.QtCore import QSize, Qt, QDate
 from PyQt5 import QtGui
 import sys, db
-from datetime import date, timedelta
+from datetime import datetime, date, timedelta
 from time import strptime, mktime, sleep
 from add_form import AddForm
 from edit_form import EditForm
@@ -57,7 +57,7 @@ class MyApp(QMainWindow):
         hbox.addWidget(self.button3)
         hbox.addWidget(self.button4)
         vbox.addLayout(hbox)
-        sleep(10)
+        #sleep(10)
         self.check_updates()
         self.load_from_file()
         self.set_readonly()
@@ -77,7 +77,7 @@ class MyApp(QMainWindow):
         n = 0
         for sub in self.subscriptions:
             sub_list = list(sub)
-            end_date = date.fromtimestamp(mktime(strptime(sub_list[6], "%Y-%m-%d")))
+            end_date = datetime.strptime(sub_list[6], "%Y-%m-%d").date()
             # увеличение даты окончания периода подписки на месяц/год
             new_end_date = None
             if end_date == date.today():
