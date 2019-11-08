@@ -142,6 +142,24 @@ class MyApp(QMainWindow):
         self.table.setRowCount(self.table.rowCount() - 1)
         self.load_from_file()
 
+    # сохранение новой записи в БД по кнопке "Сохранить"
+    def save_new_subscription(self):
+        if self.add_form.check_form():
+            service_name = self.add_form.textEdit.toPlainText()
+            state_id = self.add_form.comboBox_3.currentIndex()
+            card_id = self.add_form.comboBox.currentIndex()
+            term_end = self.add_form.dateEdit.date().toPyDate()
+            term_end_str = term_end.strftime("%Y-%m-%d")
+            duration_id = self.add_form.comboBox_2.currentIndex()
+            price = self.add_form.textEdit_2.toPlainText()
+            tuple_to_add = (service_name, state_id, card_id, duration_id, float(price), term_end_str)
+            self.db_driver.add_subscription_to_db(tuple_to_add)
+            self.table.setRowCount(self.table.rowCount() + 1)
+            self.load_from_file()
+            self.add_form.close()
+
+
+
 
 
 
