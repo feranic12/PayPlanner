@@ -15,6 +15,9 @@ class MyApp(QMainWindow):
     def __init__(self):
         super().__init__()
         self.db_driver = db.DB()
+        self.edit_form = None
+        self.add_form = None
+        self.t = None
         self.subscriptions = self.db_driver.get_all_subscriptions()
         self.setMinimumSize(QSize(1360, 450))
         self.setWindowTitle("Подписчик")
@@ -131,6 +134,7 @@ class MyApp(QMainWindow):
     def edit_selected(self):
         row_num = self.table.currentRow()
         sub = self.db_driver.get_all_subscriptions()[row_num]
+        self.t = sub
         self.edit_form = EditForm(self, sub)
         self.edit_form.show()
 
@@ -157,6 +161,21 @@ class MyApp(QMainWindow):
             self.table.setRowCount(self.table.rowCount() + 1)
             self.load_from_file()
             self.add_form.close()
+
+    # сохранение изменений в БД
+    def update_subscription(self):
+        result_tuple = []
+        result_tuple.append(self.t[0])
+        result_tuple.append(self.edit_form.textEdit.toPlainText())
+        result_tuple.append(self.edit_form.comboBox_3.currentIndex())
+        result_tuple.append(self.edit_form.comboBox.currentIndex())
+        result_tuple.append(self.edit_form.comboBox_2.currentIndex())
+        result_tuple.append(self.edit_form.textEdit_2.toPlainText())
+        res_date = self.edit_form.dateEdit.date().toPyDate()
+        result_tuple.append(res_date.strftime("%Y-%m-%d"))
+        self.db_driver.update_sub(result_tuple)
+        self.load_from_file()
+        self.edit_form.close()
 
 
 

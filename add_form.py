@@ -7,10 +7,9 @@ from base_form import BaseForm
 class AddForm(QWidget, widget_add.Ui_Form, BaseForm):
     def __init__(self, app):
         QWidget.__init__(self)
-        self.app = app
         self.setupUi(self)
-        self.pushButton.clicked.connect(self.app.save_new_subscription)
-        self.advanced_setup()
+        self.pushButton.clicked.connect(app.save_new_subscription)
+        self.advanced_setup(app)
 
     # проверка на заполненность обязательных полей
     def check_form(self):
