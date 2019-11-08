@@ -79,7 +79,6 @@ class MyApp(QMainWindow):
             sub_list = list(sub)
             end_date = datetime.strptime(sub_list[6], "%Y-%m-%d").date()
             if end_date <= date.today() + timedelta(1):
-                n = n + 1
                 sleep(5)
                 self.send_notification(sub)
             # увеличение даты окончания периода подписки на месяц/год
@@ -101,9 +100,6 @@ class MyApp(QMainWindow):
         # если были подписки, оканчивающиеся сегодня, перезагрузить таблицу
         if n > 0:
             self.load_from_file()
-            return True
-        else:
-            return False
 
     # отправка push уведомления в трей Windows о том, что скоро оканчивается срок подписки
     def send_notification(self, sub):
