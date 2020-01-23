@@ -8,6 +8,7 @@ class AddForm(QWidget, Ui_Form, BaseForm):
     def __init__(self, app):
         super().__init__()
         self.setupUi(self)
+        self.setFixedSize(356, 277)
         self.pushButton.clicked.connect(app.save_new_subscription)
         self.advanced_setup(app)
 

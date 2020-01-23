@@ -9,6 +9,7 @@ class EditForm(QWidget, widget_add.Ui_Form, BaseForm):
     def __init__(self, app, t):
         QWidget.__init__(self)
         self.setupUi(self)
+        self.setFixedSize(356, 277)
         self.setWindowTitle("Редактирование подписки")
         self.pushButton.clicked.connect(app.update_subscription)
         self.advanced_setup(app)

@@ -19,7 +19,7 @@ class MyApp(QMainWindow):
         self.add_form = None
         self.t = None
         self.subscriptions = self.db_driver.get_all_subscriptions()
-        self.setMinimumSize(QSize(1360, 450))
+        self.setFixedSize(QSize(1360, 450))
         self.setWindowTitle("Подписчик")
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
