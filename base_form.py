@@ -8,7 +8,7 @@ class BaseForm:
 
         durations = app.db_driver.get_all_durations()
         for d in durations:
-            self.comboBox_2.addItem(d[1])
+            self.comboBox_2.addItem(str(d[1]) + ' мес')
 
         bank_cards = app.db_driver.get_all_bank_cards()
         for bc in bank_cards:
