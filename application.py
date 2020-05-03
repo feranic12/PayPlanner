@@ -88,17 +88,12 @@ class MyApp(QMainWindow):
             while end_date <= date.today():
                 n = n + 1
                 # ежемесячная подписка
-                if sub_list[4] == 0:
-                    if end_date.month == 12:
-                        end_date = date(end_date.year + 1, 1, end_date.day)
-                    else:
-                        end_date = date(end_date.year, end_date.month + 1, end_date.day)
-                # ежегодная подписка
-                elif sub_list[4] == 1:
-                    end_date = date(end_date.year + 1, end_date.month, end_date.day)
+                duration = self.db_driver.get_duration_by_id(sub_list[4])
+                if duration + end_date.month <= 12:
+                    end_date = date(end_date.year, end_date.month + duration, end_date.day)
+                else:
+                    end_date = date(end_date.year + 1, end_date.month + duration - 12, end_date.day)
                 self.db_driver.update_end_date(sub[0], end_date)
-
-            # Отправка уведомления о продлении подписки
 
         # если были подписки, оканчивающиеся сегодня, перезагрузить таблицу
         if n > 0:

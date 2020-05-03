@@ -54,6 +54,15 @@ class DB:
         cur.close()
         return result
 
+    # получение длительности по id
+    def get_duration_by_id(self, id):
+        cur = self.con.cursor()
+        cur.execute("select * from durations where id = ?", [id])
+        result = cur.fetchone()[1]
+        self.con.commit()
+        cur.close()
+        return result
+
     # получение всех банковских карт для ComboBox
     def get_all_bank_cards(self):
         cur = self.con.cursor()
