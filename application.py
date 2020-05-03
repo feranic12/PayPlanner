@@ -122,7 +122,9 @@ class MyApp(QMainWindow):
         subs_for_table = self.db_driver.get_subs_for_table()
         for row in range(subs_for_table.__len__()):
             for col in range(self.table.columnCount()):
-                cellinfo = QTableWidgetItem(str(subs_for_table[row][col]))
+                if col == 5:
+                    cellinfo = QTableWidgetItem(str(subs_for_table[row][col]) + " мес")
+                else: cellinfo = QTableWidgetItem(str(subs_for_table[row][col]))
                 self.table.setItem(row, col, cellinfo)
 
     # вызов формы добавления записи в таблицу
