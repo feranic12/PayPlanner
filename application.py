@@ -176,6 +176,7 @@ class MyApp(QMainWindow):
             self.db_driver.add_subscription_to_db(tuple_to_add)
             self.table.setRowCount(self.table.rowCount() + 1)
             self.load_from_file()
+            self.color_table()
             self.add_form.close()
 
     # сохранение изменений в БД
@@ -191,6 +192,7 @@ class MyApp(QMainWindow):
         result_tuple.append(res_date.strftime("%Y-%m-%d"))
         self.db_driver.update_sub(result_tuple)
         self.load_from_file()
+        self.color_table()
         self.edit_form.close()
 
 
