@@ -63,6 +63,7 @@ class MyApp(QMainWindow):
         #sleep(10)
         self.check_updates()
         self.load_from_file()
+        self.color_table()
         self.set_readonly()
 
     # установка запрета на редактирование ячеек таблицы
@@ -71,6 +72,24 @@ class MyApp(QMainWindow):
             for col in range(self.table.columnCount()):
                 cellinfo = QTableWidgetItem(self.table.item(row,col))
                 cellinfo.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
+                self.table.setItem(row, col, cellinfo)
+
+    # покраска строк таблицы
+    def color_table(self):
+        subs = self.subscriptions
+        for row in range(self.table.rowCount()):
+            state = subs[row][2]
+            color = None
+            if state == 0:
+                color = "yellow"
+            elif state == 1:
+                color = "lightgreen"
+            elif state == 2:
+                color = "red"
+            for col in range(self.table.columnCount()):
+                cellinfo = QTableWidgetItem(self.table.item(row, col))
+                cellinfo.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
+                cellinfo.setBackground(QtGui.QColor(color))
                 self.table.setItem(row, col, cellinfo)
 
     # проверка необходимости продления каких-либо подписок
