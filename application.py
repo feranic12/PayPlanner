@@ -17,7 +17,6 @@ class MyApp(QMainWindow):
         self.db_driver = db.DB()
         self.edit_form = None
         self.add_form = None
-        self.t = None
         self.subscriptions = self.db_driver.get_all_subscriptions()
         self.setFixedSize(QSize(1360, 450))
         self.setWindowTitle("Подписчик")
@@ -76,7 +75,7 @@ class MyApp(QMainWindow):
 
     # покраска строк таблицы
     def color_table(self):
-        subs = self.subscriptions
+        subs = self.db_driver.get_all_subscriptions()
         for row in range(self.table.rowCount()):
             state = subs[row][2]
             color = None
@@ -94,10 +93,10 @@ class MyApp(QMainWindow):
 
     # проверка необходимости продления каких-либо подписок
     def check_updates(self):
-        self.subscriptions = self.db_driver.get_all_subscriptions()
+        subs = self.db_driver.get_all_subscriptions()
         # n - число подписок, оканчивающихся сегодня
         n = 0
-        for sub in self.subscriptions:
+        for sub in subs:
             sub_list = list(sub)
             end_date = datetime.strptime(sub_list[6], "%Y-%m-%d").date()
             if end_date <= date.today() + timedelta(1):
@@ -148,9 +147,9 @@ class MyApp(QMainWindow):
 
     # вызов формы редактирования записи табицы
     def edit_selected(self):
+        subs = self.db_driver.get_all_subscriptions()
         row_num = self.table.currentRow()
-        sub = self.db_driver.get_all_subscriptions()[row_num]
-        self.t = sub
+        sub = subs[row_num]
         self.edit_form = EditForm(self, sub)
         self.edit_form.show()
 
@@ -180,9 +179,12 @@ class MyApp(QMainWindow):
             self.add_form.close()
 
     # сохранение изменений в БД
-    def update_subscription(self):
+    def update_subscription(self, id):
+        subs = self.db_driver.get_all_subscriptions()
+        row_num = self.table.currentRow()
+        sub = subs[row_num]
         result_tuple = []
-        result_tuple.append(self.t[0])
+        result_tuple.append(sub[0])
         result_tuple.append(self.edit_form.textEdit.toPlainText())
         result_tuple.append(self.edit_form.comboBox_3.currentIndex())
         result_tuple.append(self.edit_form.comboBox.currentIndex())
