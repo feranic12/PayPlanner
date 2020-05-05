@@ -75,7 +75,7 @@ class MyApp(QMainWindow):
 
     # покраска строк таблицы
     def color_table(self):
-        subs = self.db_driver.get_all_subscriptions()
+        subs = self.subscriptions = self.db_driver.get_all_subscriptions()
         for row in range(self.table.rowCount()):
             state = subs[row][2]
             color = None
@@ -93,25 +93,26 @@ class MyApp(QMainWindow):
 
     # проверка необходимости продления каких-либо подписок
     def check_updates(self):
-        subs = self.db_driver.get_all_subscriptions()
+        subs = self.subscriptions = self.db_driver.get_all_subscriptions()
         # n - число подписок, оканчивающихся сегодня
         n = 0
         for sub in subs:
-            sub_list = list(sub)
-            end_date = datetime.strptime(sub_list[6], "%Y-%m-%d").date()
-            if end_date <= date.today() + timedelta(1):
-                sleep(5)
-                self.send_notification(sub)
-            # увеличение даты окончания периода подписки на месяц/год
-            while end_date <= date.today():
-                n = n + 1
-                # ежемесячная подписка
-                duration = self.db_driver.get_duration_by_id(sub_list[4])
-                if duration + end_date.month <= 12:
-                    end_date = date(end_date.year, end_date.month + duration, end_date.day)
-                else:
-                    end_date = date(end_date.year + 1, end_date.month + duration - 12, end_date.day)
-                self.db_driver.update_end_date(sub[0], end_date)
+            if sub[2] != 2:
+                sub_list = list(sub)
+                end_date = datetime.strptime(sub_list[6], "%Y-%m-%d").date()
+                if end_date <= date.today() + timedelta(1):
+                    sleep(5)
+                    self.send_notification(sub)
+                # увеличение даты окончания периода подписки на месяц/год
+                while end_date <= date.today():
+                    n = n + 1
+                    # ежемесячная подписка
+                    duration = self.db_driver.get_duration_by_id(sub_list[4])
+                    if duration + end_date.month <= 12:
+                        end_date = date(end_date.year, end_date.month + duration, end_date.day)
+                    else:
+                        end_date = date(end_date.year + 1, end_date.month + duration - 12, end_date.day)
+                    self.db_driver.update_end_date(sub[0], end_date)
 
         # если были подписки, оканчивающиеся сегодня, перезагрузить таблицу
         if n > 0:
@@ -122,7 +123,8 @@ class MyApp(QMainWindow):
         for bc in self.db_driver.get_all_bank_cards():
             if bc[0] == sub[3]:
                 card_str = bc[3] + ' ' + bc[1][-4:]
-        notification.notify(
+        if sub[2] != 2:
+            notification.notify(
             title='ПОДПИСЧИК',
             message=sub[6] + ' истекает срок продления подписки ' + sub[1] + ' . Будет списано ' + str(sub[5]) + ' рублей со счета ' + card_str,
             app_name='PayPlanner',
@@ -147,7 +149,7 @@ class MyApp(QMainWindow):
 
     # вызов формы редактирования записи табицы
     def edit_selected(self):
-        subs = self.db_driver.get_all_subscriptions()
+        subs = self.subscriptions = self.db_driver.get_all_subscriptions()
         row_num = self.table.currentRow()
         sub = subs[row_num]
         self.edit_form = EditForm(self, sub)
@@ -160,6 +162,7 @@ class MyApp(QMainWindow):
         self.db_driver.delete_sub(id)
         self.table.setRowCount(self.table.rowCount() - 1)
         self.load_from_file()
+        self.color_table()
 
     # сохранение новой записи в БД по кнопке "Сохранить"
     def save_new_subscription(self):
@@ -180,7 +183,7 @@ class MyApp(QMainWindow):
 
     # сохранение изменений в БД
     def update_subscription(self, id):
-        subs = self.db_driver.get_all_subscriptions()
+        subs = self.subscriptions = self.db_driver.get_all_subscriptions()
         row_num = self.table.currentRow()
         sub = subs[row_num]
         result_tuple = []
