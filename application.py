@@ -91,7 +91,7 @@ class MyApp(QMainWindow):
                 cellinfo.setBackground(QtGui.QColor(color))
                 self.table.setItem(row, col, cellinfo)
 
-    # проверка необходимости продления каких-либо подписок
+    # проверка необходимости продления каких-либо подписок, и фактическое продление подписок, истекающих сегодня.
     def check_updates(self):
         subs = self.subscriptions = self.db_driver.get_all_subscriptions()
         # n - число подписок, оканчивающихся сегодня
