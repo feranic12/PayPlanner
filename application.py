@@ -97,9 +97,9 @@ class MyApp(QMainWindow):
         # n - число подписок, оканчивающихся сегодня
         n = 0
         for sub in subs:
+            # если подписка не прервана
             if sub[2] != 2:
-                sub_list = list(sub)
-                end_date = datetime.strptime(sub_list[6], "%Y-%m-%d").date()
+                end_date = datetime.strptime(sub[6], "%Y-%m-%d").date()
                 if end_date <= date.today() + timedelta(1):
                     sleep(5)
                     self.send_notification(sub)
@@ -107,7 +107,7 @@ class MyApp(QMainWindow):
                 while end_date <= date.today():
                     n = n + 1
                     # ежемесячная подписка
-                    duration = self.db_driver.get_duration_by_id(sub_list[4])
+                    duration = self.db_driver.get_duration_by_id(sub[4])
                     if duration + end_date.month <= 12:
                         end_date = date(end_date.year, end_date.month + duration, end_date.day)
                     else:
@@ -123,12 +123,13 @@ class MyApp(QMainWindow):
         for bc in self.db_driver.get_all_bank_cards():
             if bc[0] == sub[3]:
                 card_str = bc[3] + ' ' + bc[1][-4:]
+        #если подписка не прервана
         if sub[2] != 2:
             notification.notify(
-            title='ПОДПИСЧИК',
-            message=sub[6] + ' истекает срок продления подписки ' + sub[1] + ' . Будет списано ' + str(sub[5]) + ' рублей со счета ' + card_str,
-            app_name='PayPlanner',
-            app_icon='icons/icon1.ico'
+            title = 'ПОДПИСЧИК',
+            message = sub[6] + ' истекает срок продления подписки ' + sub[1] + ' . Будет списано ' + str(sub[5]) + ' рублей со счета ' + card_str,
+            app_name = 'PayPlanner',
+            app_icon = 'icons/icon1.ico'
         )
 
     # заполнение таблицы актуальными данными из БД
