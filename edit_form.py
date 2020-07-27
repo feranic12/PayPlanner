@@ -1,13 +1,13 @@
-from PyQt5.QtWidgets import QWidget, QMessageBox
+from PyQt5.QtWidgets import QWidget, QMainWindow, QMessageBox
 from PyQt5.QtCore import QDate
-import widget_add
+from widget_add import Ui_Form
 from base_form import BaseForm
 
 
 # класс, представляющий форму редактирования подписки, наследующий, в т.ч. от класса, полученного в визуальном редакторе
-class EditForm(QWidget, widget_add.Ui_Form, BaseForm):
+class EditForm(QWidget, Ui_Form, BaseForm):
     def __init__(self, app, sub):
-        QWidget.__init__(self)
+        super().__init__()
         self.setupUi(self)
         self.setFixedSize(356, 277)
         self.setWindowTitle("Редактирование подписки")
