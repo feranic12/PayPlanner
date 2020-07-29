@@ -6,7 +6,7 @@ from base_form import BaseForm
 # класс, представляющий форму добавления новой записи, наследующий, в т.ч. от класса, полученного в визуальном редакторе
 class AddForm(QWidget, Ui_Form, BaseForm):
     def __init__(self, app):
-        super().__init__()
+        QWidget.__init__(self)
         self.setupUi(self)
         self.setFixedSize(356, 277)
         self.pushButton.clicked.connect(app.save_new_subscription)

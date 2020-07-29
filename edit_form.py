@@ -7,7 +7,7 @@ from base_form import BaseForm
 # класс, представляющий форму редактирования подписки, наследующий, в т.ч. от класса, полученного в визуальном редакторе
 class EditForm(QWidget, Ui_Form, BaseForm):
     def __init__(self, app, sub):
-        super().__init__()
+        QWidget.__init__(self)
         self.setupUi(self)
         self.setFixedSize(356, 277)
         self.setWindowTitle("Редактирование подписки")
