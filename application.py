@@ -14,7 +14,7 @@ class MyApp(QMainWindow):
     # инициализация элементов главного окна
     def __init__(self):
         super().__init__()
-        self.db_driver = db.DB()
+        self.db_driver = db.DB("pay_planner_db.db")
         self.edit_form = None
         self.add_form = None
         self.subscriptions = self.db_driver.get_all_subscriptions()

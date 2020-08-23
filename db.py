@@ -3,8 +3,8 @@ import sqlite3
 
 # класс, реализующий взаимодействие с базой данных
 class DB:
-    def __init__(self):
-        self.con = sqlite3.connect("pay_planner_db.db")
+    def __init__(self, filepath):
+        self.con = sqlite3.connect(filepath)
 
     # подсчет числа записей в таблице "подписки"
     def get_subs_count(self):
