@@ -18,22 +18,21 @@ class MyApp(QMainWindow):
         self.edit_form = None
         self.add_form = None
         self.subscriptions = self.db_driver.get_all_subscriptions()
-        self.setFixedSize(QSize(1360, 450))
+        self.setFixedSize(QSize(950, 450))
         self.setWindowTitle("Подписчик")
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
         vbox = QVBoxLayout()
         self.central_widget.setLayout(vbox)
         self.table = QTableWidget()
-        self.table.setColumnCount(8)
-        headers = ["Название сервиса", "Состояние подписки", "Банк карты", "Платежная система", "Номер карты",
-                   "Период продления","Сумма", "Срок окончания"]
+        self.table.setColumnCount(5)
+        headers = ["Название сервиса", "Состояние подписки","Период продления","Сумма", "Срок окончания"]
         self.table.setRowCount(self.db_driver.get_subs_count())
         self.table.setHorizontalHeaderLabels(headers)
         for x in range(self.table.columnCount()):
             self.table.horizontalHeaderItem(x).setTextAlignment(Qt.AlignCenter)
             self.table.horizontalHeaderItem(x).setFont(QtGui.QFont("Times", 8, QtGui.QFont.Bold))
-            self.table.setColumnWidth(x,160)
+            self.table.setColumnWidth(x,175)
             cellinfo = QTableWidgetItem(headers[x])
             cellinfo.setTextAlignment(Qt.AlignCenter)
 
