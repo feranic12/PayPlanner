@@ -15,11 +15,10 @@ class EditForm(QWidget, Ui_Form, BaseForm):
         self.advanced_setup(app)
         self.textEdit.setText(sub[1])
         self.comboBox_3.setCurrentIndex(sub[2])
-        self.comboBox.setCurrentIndex(sub[3])
-        self.comboBox_2.setCurrentIndex(sub[4])
-        self.textEdit_2.setText(str(sub[5]))
+        self.comboBox_2.setCurrentIndex(sub[3])
+        self.textEdit_2.setText(str(sub[4]))
         self.dateEdit.setDate(
-            QDate(int(sub[6][:4]), int(sub[6][5:7]), int(sub[6][8:10])))
+            QDate(int(sub[5][:4]), int(sub[5][5:7]), int(sub[5][8:10])))
 
 
 

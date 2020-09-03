@@ -98,7 +98,7 @@ class MyApp(QMainWindow):
         for sub in subs:
             # если подписка не прервана
             if sub[2] != 2:
-                end_date = datetime.strptime(sub[6], "%Y-%m-%d").date()
+                end_date = datetime.strptime(sub[5], "%Y-%m-%d").date()
                 if end_date <= date.today() + timedelta(1):
                     sleep(5)
                     self.send_notification(sub)
@@ -106,7 +106,7 @@ class MyApp(QMainWindow):
                 while end_date <= date.today():
                     n = n + 1
                     # ежемесячная подписка
-                    duration = self.db_driver.get_duration_by_id(sub[4])
+                    duration = self.db_driver.get_duration_by_id(sub[3])
                     if duration + end_date.month <= 12:
                         end_date = date(end_date.year, end_date.month + duration, end_date.day)
                     else:
@@ -116,19 +116,17 @@ class MyApp(QMainWindow):
         # если были подписки, оканчивающиеся сегодня, перезагрузить таблицу
         if n > 0:
             self.load_from_file()
+            self.color_table()
 
     # отправка push уведомления в трей Windows о том, что скоро оканчивается срок подписки
     def send_notification(self, sub):
-        for bc in self.db_driver.get_all_bank_cards():
-            if bc[0] == sub[3]:
-                card_str = bc[3] + ' ' + bc[1][-4:]
         #если подписка не прервана
         if sub[2] != 2:
             notification.notify(
-            title = 'ПОДПИСЧИК',
-            message = sub[6] + ' истекает срок продления подписки ' + sub[1] + ' . Будет списано ' + str(sub[5]) + ' рублей со счета ' + card_str,
-            app_name = 'PayPlanner',
-            app_icon = 'icons/icon1.ico'
+            title='ПОДПИСЧИК',
+            message=sub[5] + ' истекает срок продления подписки ' + sub[1] + ' . Будет списано ' + str(sub[4]) + ' рублей',
+            app_name='PayPlanner',
+            app_icon='icons/icon1.ico'
         )
 
     # заполнение таблицы актуальными данными из БД
@@ -137,8 +135,8 @@ class MyApp(QMainWindow):
         subs_for_table = self.db_driver.get_subs_for_table()
         for row in range(subs_for_table.__len__()):
             for col in range(self.table.columnCount()):
-                if col == 5:
-                    cellinfo = QTableWidgetItem(str(subs_for_table[row][col]) + " мес")
+                if col == 2:
+                    cellinfo = QTableWidgetItem(str(subs_for_table[row][col]) + " мес.")
                 else: cellinfo = QTableWidgetItem(str(subs_for_table[row][col]))
                 self.table.setItem(row, col, cellinfo)
 
@@ -169,12 +167,11 @@ class MyApp(QMainWindow):
         if self.add_form.check_form():
             service_name = self.add_form.textEdit.toPlainText()
             state_id = self.add_form.comboBox_3.currentIndex()
-            card_id = self.add_form.comboBox.currentIndex()
             term_end = self.add_form.dateEdit.date().toPyDate()
             term_end_str = term_end.strftime("%Y-%m-%d")
             duration_id = self.add_form.comboBox_2.currentIndex()
             price = self.add_form.textEdit_2.toPlainText()
-            tuple_to_add = (service_name, state_id, card_id, duration_id, float(price), term_end_str)
+            tuple_to_add = (service_name, state_id, duration_id, float(price), term_end_str)
             self.db_driver.add_subscription_to_db(tuple_to_add)
             self.table.setRowCount(self.table.rowCount() + 1)
             self.load_from_file()
@@ -190,7 +187,6 @@ class MyApp(QMainWindow):
         result_tuple.append(sub[0])
         result_tuple.append(self.edit_form.textEdit.toPlainText())
         result_tuple.append(self.edit_form.comboBox_3.currentIndex())
-        result_tuple.append(self.edit_form.comboBox.currentIndex())
         result_tuple.append(self.edit_form.comboBox_2.currentIndex())
         result_tuple.append(self.edit_form.textEdit_2.toPlainText())
         res_date = self.edit_form.dateEdit.date().toPyDate()
