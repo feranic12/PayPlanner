@@ -1,11 +1,11 @@
 from PyQt5.QtWidgets import QWidget, QMainWindow, QMessageBox
 from PyQt5.QtCore import QDate
 from widget_add import Ui_Form
-from base_form import BaseForm
+from AdvancedSetup import AdvancedSetup
 
 
 # класс, представляющий форму редактирования подписки, наследующий, в т.ч. от класса, полученного в визуальном редакторе
-class EditForm(QWidget, Ui_Form, BaseForm):
+class EditForm(QWidget, Ui_Form, AdvancedSetup):
     def __init__(self, app, sub):
         QWidget.__init__(self)
         self.setupUi(self)
