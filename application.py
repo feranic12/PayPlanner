@@ -58,19 +58,9 @@ class MyApp(QMainWindow):
         hbox.addWidget(self.button3)
         hbox.addWidget(self.button4)
         vbox.addLayout(hbox)
-        #sleep(10)
         self.check_updates()
         self.load_from_file()
         self.color_table()
-        self.set_readonly()
-
-    # установка запрета на редактирование ячеек таблицы
-    def set_readonly(self):
-        for row in range(self.table.rowCount()):
-            for col in range(self.table.columnCount()):
-                cellinfo = QTableWidgetItem(self.table.item(row,col))
-                cellinfo.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
-                self.table.setItem(row, col, cellinfo)
 
     # покраска строк таблицы
     def color_table(self):
@@ -86,7 +76,6 @@ class MyApp(QMainWindow):
                 color = "red"
             for col in range(self.table.columnCount()):
                 cellinfo = QTableWidgetItem(self.table.item(row, col))
-                cellinfo.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
                 cellinfo.setBackground(QtGui.QColor(color))
                 self.table.setItem(row, col, cellinfo)
 
