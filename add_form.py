@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QWidget, QMessageBox
 from widget_add import Ui_Form
-from AdvancedSetup import AdvancedSetup
+from advanced_setup import AdvancedSetup
 
 
 # класс, представляющий форму добавления новой записи, наследующий, в т.ч. от класса, полученного в визуальном редакторе
