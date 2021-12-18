@@ -44,6 +44,10 @@ class MyApp(QMainWindow):
         self.button3.setText("Удалить")
         self.button4 = QPushButton()
         self.button4.setText("Проверить")
+        self.button5 = QPushButton()
+        self.button5.setText("Сумма за период")
+        self.button6 = QPushButton()
+        self.button6.setText("Диаграмма")
 
         self.button1.clicked.connect(self.add_new_subscription)
         self.button2.clicked.connect(self.edit_selected)
@@ -58,6 +62,11 @@ class MyApp(QMainWindow):
         hbox.addWidget(self.button3)
         hbox.addWidget(self.button4)
         vbox.addLayout(hbox)
+        hbox1 = QHBoxLayout()
+        hbox1.addWidget(self.button5)
+        hbox1.addWidget(self.button6)
+        vbox.addLayout(hbox1)
+
         self.check_updates()
         self.load_from_file()
         self.color_table()
