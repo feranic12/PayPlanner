@@ -7,7 +7,7 @@ from datetime import datetime, date, timedelta
 from time import strptime, mktime, sleep
 from add_form import AddForm
 from edit_form import EditForm
-
+from dates_dialog import DatesDialog
 
 # класс приложения, представляющий главное окно приложения
 class MyApp(QMainWindow):
@@ -196,6 +196,9 @@ class MyApp(QMainWindow):
 
     # подсчет суммарной стоимсти подписок за период
     def calculate_sum_price(self, start_date, end_date):
+        dates_dialog = DatesDialog(self)
+        start_date = dates_dialog.dateEdit.date()
+        end_date = dates_dialog.dateEdit_2.date()
         result_sum = 0
         subs = self.db_driver.get_all_subscriptions()
         for sub in subs:
