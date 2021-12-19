@@ -17,6 +17,7 @@ class MyApp(QMainWindow):
         self.db_driver = db.DB("pay_planner_db.db")
         self.edit_form = None
         self.add_form = None
+        self.dates_dialog = None
         self.subscriptions = self.db_driver.get_all_subscriptions()
         self.setFixedSize(QSize(950, 450))
         self.setWindowTitle("Подписчик")
@@ -53,6 +54,7 @@ class MyApp(QMainWindow):
         self.button2.clicked.connect(self.edit_selected)
         self.button3.clicked.connect(self.delete_subscription)
         self.button4.clicked.connect(self.check_updates)
+        self.button5.clicked.connect(self.open_dates_dialog)
         self.table.doubleClicked.connect(self.edit_selected)
 
         vbox.addWidget(self.table)
@@ -151,6 +153,10 @@ class MyApp(QMainWindow):
         self.edit_form = EditForm(self, sub)
         self.edit_form.show()
 
+    def open_dates_dialog(self):
+        self.dates_dialog = DatesDialog(self)
+        self.dates_dialog.show()
+
     # удаление выбранной записи из таблицы
     def delete_subscription(self):
         row_num = self.table.currentRow()
@@ -195,10 +201,10 @@ class MyApp(QMainWindow):
         self.edit_form.close()
 
     # подсчет суммарной стоимсти подписок за период
-    def calculate_sum_price(self, start_date, end_date):
+    def calculate_sum_price(self):
         dates_dialog = DatesDialog(self)
-        start_date = dates_dialog.dateEdit.date()
-        end_date = dates_dialog.dateEdit_2.date()
+        start_date = dates_dialog.dateEdit.date().toPyDate()
+        end_date = dates_dialog.dateEdit_2.date().toPyDate()
         result_sum = 0
         subs = self.db_driver.get_all_subscriptions()
         for sub in subs:
