@@ -7,7 +7,7 @@ from datetime import datetime, date, timedelta
 from time import strptime, mktime, sleep
 from add_form import AddForm
 from edit_form import EditForm
-from dates_dialog import DatesDialog
+from sum_count_form import SumCountForm
 
 # класс приложения, представляющий главное окно приложения
 class MyApp(QMainWindow):
@@ -17,7 +17,7 @@ class MyApp(QMainWindow):
         self.db_driver = db.DB("pay_planner_db.db")
         self.edit_form = None
         self.add_form = None
-        self.dates_dialog = None
+        self.dates_form = None
         self.subscriptions = self.db_driver.get_all_subscriptions()
         self.setFixedSize(QSize(950, 450))
         self.setWindowTitle("Подписчик")
@@ -54,7 +54,7 @@ class MyApp(QMainWindow):
         self.button2.clicked.connect(self.edit_selected)
         self.button3.clicked.connect(self.delete_subscription)
         self.button4.clicked.connect(self.check_updates)
-        self.button5.clicked.connect(self.open_dates_dialog)
+        self.button5.clicked.connect(self.open_sum_count_form)
         self.table.doubleClicked.connect(self.edit_selected)
 
         vbox.addWidget(self.table)
@@ -153,9 +153,9 @@ class MyApp(QMainWindow):
         self.edit_form = EditForm(self, sub)
         self.edit_form.show()
 
-    def open_dates_dialog(self):
-        self.dates_dialog = DatesDialog(self)
-        self.dates_dialog.show()
+    def open_sum_count_form(self):
+        self.sum_count_form = SumCountForm(self)
+        self.sum_count_form.show()
 
     # удаление выбранной записи из таблицы
     def delete_subscription(self):

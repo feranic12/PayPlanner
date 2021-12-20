@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>286</width>
+    <height>165</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Сумма за период</string>
+  </property>
+  <widget class="QPushButton" name="pushButton">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>120</y>
+     <width>93</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Посчитать</string>
+   </property>
+  </widget>
+  <widget class="QDateEdit" name="dateEdit">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>30</y>
+     <width>110</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QDateEdit" name="dateEdit_2">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>70</y>
+     <width>110</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>30</y>
+     <width>101</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Начало периода</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>70</y>
+     <width>91</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Конец периода</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
