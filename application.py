@@ -17,7 +17,7 @@ class MyApp(QMainWindow):
         self.db_driver = db.DB("pay_planner_db.db")
         self.edit_form = None
         self.add_form = None
-        self.dates_form = None
+        self.sum_count_form = None
         self.subscriptions = self.db_driver.get_all_subscriptions()
         self.setFixedSize(QSize(950, 450))
         self.setWindowTitle("Подписчик")
@@ -202,13 +202,12 @@ class MyApp(QMainWindow):
 
     # подсчет суммарной стоимсти подписок за период
     def calculate_sum_price(self):
-        dates_dialog = DatesDialog(self)
-        start_date = dates_dialog.dateEdit.date().toPyDate()
-        end_date = dates_dialog.dateEdit_2.date().toPyDate()
+        start_date = self.sum_count_form.dateEdit.date()
+        end_date = self.sum_count_form.dateEdit_2.date()
         result_sum = 0
         subs = self.db_driver.get_all_subscriptions()
         for sub in subs:
-            next_date = datetime.datetime.strptime(sub[5], "%Y-%m-%d").date()
+            next_date = datetime.strptime(sub[5], "%Y-%m-%d").date()
             duration = self.db_driver.get_duration_by_id(sub[3])
             while next_date < start_date:
                 if next_date.month + duration <= 12:
@@ -221,9 +220,9 @@ class MyApp(QMainWindow):
                     next_date = date(next_date.year, next_date.month + duration, next_date.day)
                 else:
                     next_date = date(next_date.year + 1, next_date.month + duration - 12, next_date.day)
-        return result_sum
-
-
+        msg_box = QMessageBox()
+        msg_box.setText("Сумма платежей за выбранный период: {0} рублей.".format(result_sum))
+        msg_box.exec()
 
 
 

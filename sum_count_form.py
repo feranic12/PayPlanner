@@ -7,6 +7,6 @@ class SumCountForm(QWidget, Ui_Form):
     def __init__(self, app):
         QWidget.__init__(self)
         self.setupUi(self)
-        self.pushButton.clicked.connect(app.calculate_sum_price)
         self.dateEdit.setDate(date.today())
         self.dateEdit_2.setDate(date.today())
+        self.pushButton.clicked.connect(app.calculate_sum_price)
