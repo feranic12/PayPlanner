@@ -1,0 +1,2 @@
+class WrongDatesException(Exception):
+    pass

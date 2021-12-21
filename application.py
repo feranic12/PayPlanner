@@ -2,7 +2,7 @@ from plyer import notification
 from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, QVBoxLayout,QHBoxLayout, QWidget, QTableWidget,QTableWidgetItem, QPushButton, QMessageBox
 from PyQt5.QtCore import QSize, Qt, QDate
 from PyQt5 import QtGui
-import sys, db
+import sys, db, util
 from datetime import datetime, date, timedelta
 from time import strptime, mktime, sleep
 from add_form import AddForm
@@ -200,10 +200,18 @@ class MyApp(QMainWindow):
         self.color_table()
         self.edit_form.close()
 
-    # подсчет суммарной стоимсти подписок за период
+    # подсчет суммарной стоимости подписок за период
     def calculate_sum_price(self):
-        start_date = self.sum_count_form.dateEdit.date()
-        end_date = self.sum_count_form.dateEdit_2.date()
+        try:
+            start_date = self.sum_count_form.dateEdit.date()
+            end_date = self.sum_count_form.dateEdit_2.date()
+            if start_date > end_date:
+                raise util.WrongDatesException
+        except util.WrongDatesException:
+            msg_box = QMessageBox()
+            msg_box.setText("Ошибка! Дата начала позже даты окончания!")
+            msg_box.exec()
+            return
         result_sum = 0
         subs = self.db_driver.get_all_subscriptions()
         for sub in subs:
