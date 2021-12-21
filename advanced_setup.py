@@ -1,5 +1,5 @@
 # базовый класс для классов EditForm и AddForm
-class BaseForm:
+class AdvancedSetup:
     # инициализация выпадающих списков значениями из БД
     def advanced_setup(self, app):
         states = app.db_driver.get_all_states()

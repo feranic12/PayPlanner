@@ -2,12 +2,12 @@ from plyer import notification
 from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, QVBoxLayout,QHBoxLayout, QWidget, QTableWidget,QTableWidgetItem, QPushButton, QMessageBox
 from PyQt5.QtCore import QSize, Qt, QDate
 from PyQt5 import QtGui
-import sys, db
+import sys, db, util
 from datetime import datetime, date, timedelta
 from time import strptime, mktime, sleep
 from add_form import AddForm
 from edit_form import EditForm
-
+from sum_count_form import SumCountForm
 
 # класс приложения, представляющий главное окно приложения
 class MyApp(QMainWindow):
@@ -17,6 +17,7 @@ class MyApp(QMainWindow):
         self.db_driver = db.DB("pay_planner_db.db")
         self.edit_form = None
         self.add_form = None
+        self.sum_count_form = None
         self.subscriptions = self.db_driver.get_all_subscriptions()
         self.setFixedSize(QSize(950, 450))
         self.setWindowTitle("Подписчик")
@@ -44,11 +45,16 @@ class MyApp(QMainWindow):
         self.button3.setText("Удалить")
         self.button4 = QPushButton()
         self.button4.setText("Проверить")
+        self.button5 = QPushButton()
+        self.button5.setText("Сумма за период")
+        self.button6 = QPushButton()
+        self.button6.setText("Диаграмма")
 
         self.button1.clicked.connect(self.add_new_subscription)
         self.button2.clicked.connect(self.edit_selected)
         self.button3.clicked.connect(self.delete_subscription)
         self.button4.clicked.connect(self.check_updates)
+        self.button5.clicked.connect(self.open_sum_count_form)
         self.table.doubleClicked.connect(self.edit_selected)
 
         vbox.addWidget(self.table)
@@ -58,19 +64,14 @@ class MyApp(QMainWindow):
         hbox.addWidget(self.button3)
         hbox.addWidget(self.button4)
         vbox.addLayout(hbox)
-        #sleep(10)
+        hbox1 = QHBoxLayout()
+        hbox1.addWidget(self.button5)
+        hbox1.addWidget(self.button6)
+        vbox.addLayout(hbox1)
+
         self.check_updates()
         self.load_from_file()
         self.color_table()
-        self.set_readonly()
-
-    # установка запрета на редактирование ячеек таблицы
-    def set_readonly(self):
-        for row in range(self.table.rowCount()):
-            for col in range(self.table.columnCount()):
-                cellinfo = QTableWidgetItem(self.table.item(row,col))
-                cellinfo.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
-                self.table.setItem(row, col, cellinfo)
 
     # покраска строк таблицы
     def color_table(self):
@@ -86,7 +87,6 @@ class MyApp(QMainWindow):
                 color = "red"
             for col in range(self.table.columnCount()):
                 cellinfo = QTableWidgetItem(self.table.item(row, col))
-                cellinfo.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
                 cellinfo.setBackground(QtGui.QColor(color))
                 self.table.setItem(row, col, cellinfo)
 
@@ -153,6 +153,10 @@ class MyApp(QMainWindow):
         self.edit_form = EditForm(self, sub)
         self.edit_form.show()
 
+    def open_sum_count_form(self):
+        self.sum_count_form = SumCountForm(self)
+        self.sum_count_form.show()
+
     # удаление выбранной записи из таблицы
     def delete_subscription(self):
         row_num = self.table.currentRow()
@@ -196,7 +200,37 @@ class MyApp(QMainWindow):
         self.color_table()
         self.edit_form.close()
 
-
+    # подсчет суммарной стоимости подписок за период
+    def calculate_sum_price(self):
+        try:
+            start_date = self.sum_count_form.dateEdit.date()
+            end_date = self.sum_count_form.dateEdit_2.date()
+            if start_date > end_date:
+                raise util.WrongDatesException
+        except util.WrongDatesException:
+            msg_box = QMessageBox()
+            msg_box.setText("Ошибка! Дата начала позже даты окончания!")
+            msg_box.exec()
+            return
+        result_sum = 0
+        subs = self.db_driver.get_all_subscriptions()
+        for sub in subs:
+            next_date = datetime.strptime(sub[5], "%Y-%m-%d").date()
+            duration = self.db_driver.get_duration_by_id(sub[3])
+            while next_date < start_date:
+                if next_date.month + duration <= 12:
+                    next_date = date(next_date.year, next_date.month + duration, next_date.day)
+                else:
+                    next_date = date(next_date.year + 1, next_date.month + duration - 12, next_date.day)
+            while next_date <= end_date:
+                result_sum += sub[4]
+                if next_date.month + duration <= 12:
+                    next_date = date(next_date.year, next_date.month + duration, next_date.day)
+                else:
+                    next_date = date(next_date.year + 1, next_date.month + duration - 12, next_date.day)
+        msg_box = QMessageBox()
+        msg_box.setText("Сумма платежей за выбранный период: {0} рублей.".format(result_sum))
+        msg_box.exec()
 
 
 
