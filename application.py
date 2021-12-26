@@ -252,7 +252,7 @@ class MyApp(QMainWindow):
                 sum_values.append(self.calculate_sum_price_for_one_month(current_month, start_year))
                 xticks.append(months[current_month] + str(start_year))
             else:
-                sum_values.append(self.calculate_sum_price_for_one_month(self.db_driver, current_month - 12, start_year + 1))
+                sum_values.append(self.calculate_sum_price_for_one_month(current_month - 12, start_year + 1))
                 xticks.append(months[current_month - 12] + str(start_year + 1))
         dataset = [sum_values, xticks]
         return dataset
