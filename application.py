@@ -8,6 +8,7 @@ from time import strptime, mktime, sleep
 from add_form import AddForm
 from edit_form import EditForm
 from sum_count_form import SumCountForm
+from MatplotlibHelper import MplWidget
 
 # класс приложения, представляющий главное окно приложения
 class MyApp(QMainWindow):
@@ -55,6 +56,7 @@ class MyApp(QMainWindow):
         self.button3.clicked.connect(self.delete_subscription)
         self.button4.clicked.connect(self.check_updates)
         self.button5.clicked.connect(self.open_sum_count_form)
+        self.button6.clicked.connect(self.show_diagram)
         self.table.doubleClicked.connect(self.edit_selected)
 
         vbox.addWidget(self.table)
@@ -231,6 +233,10 @@ class MyApp(QMainWindow):
         msg_box = QMessageBox()
         msg_box.setText("Сумма платежей за выбранный период: {0} рублей.".format(result_sum))
         msg_box.exec()
+
+    def show_diagram(self):
+        self.mpl_widget = MplWidget()
+        self.mpl_widget.show()
 
 
 
