@@ -19,6 +19,9 @@ class MyApp(QMainWindow):
         self.edit_form = None
         self.add_form = None
         self.sum_count_form = None
+        self.mpl_widget = None
+        self.start_date = None
+        self.end_date = None
         self.subscriptions = self.db_driver.get_all_subscriptions()
         self.setFixedSize(QSize(950, 450))
         self.setWindowTitle("Подписчик")
@@ -159,6 +162,14 @@ class MyApp(QMainWindow):
         self.sum_count_form = SumCountForm(self)
         self.sum_count_form.show()
 
+    def show_sum_price(self):
+        start_date = self.sum_count_form.dateEdit.date()
+        end_date = self.sum_count_form.dateEdit_2.date()
+        result_sum = self.calculate_sum_price(start_date, end_date)
+        msg_box = QMessageBox()
+        msg_box.setText("Сумма платежей за выбранный период: {0} рублей.".format(result_sum))
+        msg_box.exec()
+
     # удаление выбранной записи из таблицы
     def delete_subscription(self):
         row_num = self.table.currentRow()
@@ -203,12 +214,9 @@ class MyApp(QMainWindow):
         self.edit_form.close()
 
     # подсчет суммарной стоимости подписок за период
-    def calculate_sum_price(self):
+    def calculate_sum_price(self, start_date, end_date):
         try:
-            start_date = self.sum_count_form.dateEdit.date()
-            end_date = self.sum_count_form.dateEdit_2.date()
-            if start_date > end_date:
-                raise util.WrongDatesException
+            if start_date > end_date:  raise util.WrongDatesException
         except util.WrongDatesException:
             msg_box = QMessageBox()
             msg_box.setText("Ошибка! Дата начала позже даты окончания!")
@@ -230,12 +238,36 @@ class MyApp(QMainWindow):
                     next_date = date(next_date.year, next_date.month + duration, next_date.day)
                 else:
                     next_date = date(next_date.year + 1, next_date.month + duration - 12, next_date.day)
-        msg_box = QMessageBox()
-        msg_box.setText("Сумма платежей за выбранный период: {0} рублей.".format(result_sum))
-        msg_box.exec()
+
+        return result_sum
+
+    # формирование набора данных для диаграммы
+    def make_dataset(self):
+        months = {1: "янв.", 2: "фев.", 3: "мар.", 4: "апр.", 5: "май", 6: "июн.", 7: "июл.", 8: "авг.", 9: "сен.",
+                  10: "окт.", 11: "ноя.", 12: "дек."}
+        sum_values = []
+        xticks = []
+        start_month = 1 if datetime.today().month == 12 else datetime.today().month + 1
+        start_year = datetime.today().year + 1 if datetime.today().month == 12 else datetime.today().year
+        for current_month in range(start_month, start_month + 12):
+            if current_month <= 12:
+                sum_values.append(self.calculate_sum_price_for_one_month(current_month, start_year))
+                xticks.append(months[current_month] + str(start_year))
+            else:
+                sum_values.append(self.calculate_sum_price_for_one_month(self.db_driver, current_month - 12, start_year + 1))
+                xticks.append(months[current_month - 12] + str(start_year + 1))
+        dataset = [sum_values, xticks]
+        return dataset
+
+    # подсчет суммарной стоимости подписок за один месяц.
+    # Результат будет использован для построения столбчатой диаграммы за год.
+    def calculate_sum_price_for_one_month(self, month, year):
+        start_date = date(year, month, 1)
+        end_date = date(year, month, util.get_last_day_of_month(month, year))
+        return self.calculate_sum_price(start_date, end_date)
 
     def show_diagram(self):
-        self.mpl_widget = MplWidget()
+        self.mpl_widget = MplWidget(self)
         self.mpl_widget.show()
 
 

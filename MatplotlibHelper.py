@@ -1,19 +1,26 @@
 from PyQt5 import QtWidgets
-from matplotlib.figure import Figure
+from matplotlib import pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as Canvas
-import matplotlib
 
 
 class MplCanvas(Canvas):
-    def __init__(self, parent = None, width = 5, height = 4, dpi = 100):
-        self.fig = Figure(figsize=(width, height), dpi = dpi)
-        Canvas.__init__(self, self.fig)
+    def __init__(self, app):
+        dataset = app.make_dataset()
+        values = dataset[0]
+        index = dataset[1]
+        plt.bar(index, values, color="lightblue")
+        fig = plt.gcf()
+        fig.set_figwidth(12)
+        fig.set_figheight(5)
+        Canvas.__init__(self, fig)
 
 
 class MplWidget(QtWidgets.QWidget):
-    def __init__(self):
+    def __init__(self, app):
         QtWidgets.QWidget.__init__(self)
-        self.canvas = MplCanvas()
+        self.canvas = MplCanvas(app)
         vbox = QtWidgets.QVBoxLayout()
         vbox.addWidget(self.canvas)
         self.setLayout(vbox)
+
+
