@@ -20,8 +20,6 @@ class MyApp(QMainWindow):
         self.add_form = None
         self.sum_count_form = None
         self.mpl_widget = None
-        self.start_date = None
-        self.end_date = None
         self.subscriptions = self.db_driver.get_all_subscriptions()
         self.setFixedSize(QSize(950, 450))
         self.setWindowTitle("Подписчик")
