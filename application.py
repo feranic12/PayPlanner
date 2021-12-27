@@ -163,7 +163,13 @@ class MyApp(QMainWindow):
     def show_sum_price(self):
         start_date = self.sum_count_form.dateEdit.date()
         end_date = self.sum_count_form.dateEdit_2.date()
-        result_sum = self.calculate_sum_price(start_date, end_date)
+        try:
+            result_sum = self.calculate_sum_price(start_date, end_date)
+        except util.WrongDatesException:
+            msg_box = QMessageBox()
+            msg_box.setText("Ошибка! Дата начала позже даты окончания!")
+            msg_box.exec()
+            return
         msg_box = QMessageBox()
         msg_box.setText("Сумма платежей за выбранный период: {0} рублей.".format(result_sum))
         msg_box.exec()
@@ -213,13 +219,7 @@ class MyApp(QMainWindow):
 
     # подсчет суммарной стоимости подписок за период
     def calculate_sum_price(self, start_date, end_date):
-        try:
-            if start_date > end_date:  raise util.WrongDatesException
-        except util.WrongDatesException:
-            msg_box = QMessageBox()
-            msg_box.setText("Ошибка! Дата начала позже даты окончания!")
-            msg_box.exec()
-            return
+        if start_date > end_date:  raise util.WrongDatesException
         result_sum = 0
         subs = self.db_driver.get_all_subscriptions()
         for sub in subs:
