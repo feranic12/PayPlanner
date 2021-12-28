@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QMessageBox
 from widget_add import Ui_Form
 from advanced_setup import AdvancedSetup
+import util
 
 
 # класс, представляющий форму добавления новой записи, наследующий, в т.ч. от класса, полученного в визуальном редакторе
@@ -15,11 +16,8 @@ class AddForm(QWidget, Ui_Form, AdvancedSetup):
     # проверка на заполненность обязательных полей
     def check_form(self):
         if self.textEdit.toPlainText() == "" or self.textEdit_2.toPlainText() == "":
-            msg = QMessageBox()
-            msg.setWindowTitle("Внимание!")
-            msg.setText("Внимание! Заполнены не все поля!")
-            msg.addButton("OK", QMessageBox.AcceptRole)
-            msg.exec()
+            raise util.AddFormNotFilledException
+
             return False
         else:
             return True

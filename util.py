@@ -5,6 +5,10 @@ class WrongDatesException(Exception):
     pass
 
 
+class AddFormNotFilledException(Exception):
+    pass
+
+
 def get_last_day_of_month(month, year):
     if month in (1, 3, 5, 7, 8, 10, 12):
         return 31

@@ -185,19 +185,27 @@ class MyApp(QMainWindow):
 
     # сохранение новой записи в БД по кнопке "Сохранить"
     def save_new_subscription(self):
-        if self.add_form.check_form():
-            service_name = self.add_form.textEdit.toPlainText()
-            state_id = self.add_form.comboBox_3.currentIndex()
-            term_end = self.add_form.dateEdit.date().toPyDate()
-            term_end_str = term_end.strftime("%Y-%m-%d")
-            duration_id = self.add_form.comboBox_2.currentIndex()
-            price = self.add_form.textEdit_2.toPlainText()
-            tuple_to_add = (service_name, state_id, duration_id, float(price), term_end_str)
-            self.db_driver.add_subscription_to_db(tuple_to_add)
-            self.table.setRowCount(self.table.rowCount() + 1)
-            self.load_from_file()
-            self.color_table()
-            self.add_form.close()
+        try:
+            self.add_form.check_form()
+        except util.AddFormNotFilledException:
+            msg = QMessageBox()
+            msg.setWindowTitle("Внимание!")
+            msg.setText("Внимание! Заполнены не все поля!")
+            msg.addButton("OK", QMessageBox.AcceptRole)
+            msg.exec()
+            return
+        service_name = self.add_form.textEdit.toPlainText()
+        state_id = self.add_form.comboBox_3.currentIndex()
+        term_end = self.add_form.dateEdit.date().toPyDate()
+        term_end_str = term_end.strftime("%Y-%m-%d")
+        duration_id = self.add_form.comboBox_2.currentIndex()
+        price = self.add_form.textEdit_2.toPlainText()
+        tuple_to_add = (service_name, state_id, duration_id, float(price), term_end_str)
+        self.db_driver.add_subscription_to_db(tuple_to_add)
+        self.table.setRowCount(self.table.rowCount() + 1)
+        self.load_from_file()
+        self.color_table()
+        self.add_form.close()
 
     # сохранение изменений в БД
     def update_subscription(self, id):
