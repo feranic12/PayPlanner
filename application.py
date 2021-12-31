@@ -102,11 +102,11 @@ class MyApp(QMainWindow):
             if sub[2] != 2:
                 end_date = datetime.strptime(sub[5], "%Y-%m-%d").date()
                 if end_date <= date.today() + timedelta(1):
-                    sleep(5)
+                    n = n + 1
                     self.send_notification(sub)
+                    sleep(5)
                 # увеличение даты окончания периода подписки на месяц/год
                 while end_date <= date.today():
-                    n = n + 1
                     # ежемесячная подписка
                     duration = self.db_driver.get_duration_by_id(sub[3])
                     if duration + end_date.month <= 12:
@@ -119,6 +119,11 @@ class MyApp(QMainWindow):
         if n > 0:
             self.load_from_file()
             self.color_table()
+        else:
+            msg_box = QMessageBox()
+            msg_box.setText("Подписок, подлежащих продлению, в данный момент нет.")
+            msg_box.exec()
+
 
     # отправка push уведомления в трей Windows о том, что скоро оканчивается срок подписки
     def send_notification(self, sub):
@@ -226,7 +231,8 @@ class MyApp(QMainWindow):
 
     # подсчет суммарной стоимости подписок за период
     def calculate_sum_price(self, start_date, end_date):
-        if start_date > end_date:  raise util.WrongDatesException
+        if start_date > end_date:
+            raise util.WrongDatesException
         result_sum = 0
         subs = self.db_driver.get_all_subscriptions()
         for sub in subs:
