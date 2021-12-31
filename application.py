@@ -20,7 +20,6 @@ class MyApp(QMainWindow):
         self.add_form = None
         self.sum_count_form = None
         self.mpl_widget = None
-        self.subscriptions = self.db_driver.get_all_subscriptions()
         self.setFixedSize(QSize(950, 450))
         self.setWindowTitle("Подписчик")
         self.central_widget = QWidget()
@@ -78,7 +77,7 @@ class MyApp(QMainWindow):
 
     # покраска строк таблицы
     def color_table(self):
-        subs = self.subscriptions = self.db_driver.get_all_subscriptions()
+        subs = self.db_driver.get_all_subscriptions()
         for row in range(self.table.rowCount()):
             state = subs[row][2]
             color = None
@@ -95,7 +94,7 @@ class MyApp(QMainWindow):
 
     # проверка необходимости продления каких-либо подписок, и фактическое продление подписок, истекающих сегодня.
     def check_updates(self):
-        subs = self.subscriptions = self.db_driver.get_all_subscriptions()
+        subs = self.db_driver.get_all_subscriptions()
         # n - число подписок, оканчивающихся сегодня
         n = 0
         for sub in subs:
@@ -150,7 +149,7 @@ class MyApp(QMainWindow):
 
     # вызов формы редактирования записи табицы
     def edit_selected(self):
-        subs = self.subscriptions = self.db_driver.get_all_subscriptions()
+        subs = self.db_driver.get_all_subscriptions()
         row_num = self.table.currentRow()
         sub = subs[row_num]
         self.edit_form = EditForm(self, sub)
@@ -209,7 +208,7 @@ class MyApp(QMainWindow):
 
     # сохранение изменений в БД
     def update_subscription(self, id):
-        subs = self.subscriptions = self.db_driver.get_all_subscriptions()
+        subs = self.db_driver.get_all_subscriptions()
         row_num = self.table.currentRow()
         sub = subs[row_num]
         result_tuple = []
