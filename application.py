@@ -10,6 +10,7 @@ from edit_form import EditForm
 from sum_count_form import SumCountForm
 from MatplotlibHelper import MplWidget
 
+
 # класс приложения, представляющий главное окно приложения
 class MyApp(QMainWindow):
     # инициализация элементов главного окна
@@ -92,10 +93,11 @@ class MyApp(QMainWindow):
                 cellinfo.setBackground(QtGui.QColor(color))
                 self.table.setItem(row, col, cellinfo)
 
-    # проверка необходимости продления каких-либо подписок, и фактическое продление подписок, истекающих сегодня.
+    # проверка необходимости продления каких-либо подписок если исткают сегодня или завтра
+    # и фактическое продление подписок, истекающих сегодня.
     def check_updates(self):
         subs = self.db_driver.get_all_subscriptions()
-        # n - число подписок, оканчивающихся сегодня
+        # n - число подписок, оканчивающихся сегодня или завтра
         n = 0
         for sub in subs:
             # если подписка не прервана
@@ -105,9 +107,9 @@ class MyApp(QMainWindow):
                     n = n + 1
                     self.send_notification(sub)
                     sleep(5)
-                # увеличение даты окончания периода подписки на месяц/год
+                # увеличение даты окончания периода подписки на период действия подписки
                 while end_date <= date.today():
-                    # ежемесячная подписка
+                    # продление подписки
                     duration = self.db_driver.get_duration_by_id(sub[3])
                     if duration + end_date.month <= 12:
                         end_date = date(end_date.year, end_date.month + duration, end_date.day)
@@ -115,7 +117,7 @@ class MyApp(QMainWindow):
                         end_date = date(end_date.year + 1, end_date.month + duration - 12, end_date.day)
                     self.db_driver.update_end_date(sub[0], end_date)
 
-        # если были подписки, оканчивающиеся сегодня, перезагрузить таблицу
+        # если были подписки, оканчивающиеся сегодняи или завтра, перезагрузить таблицу
         if n > 0:
             self.load_from_file()
             self.color_table()
@@ -124,10 +126,9 @@ class MyApp(QMainWindow):
             msg_box.setText("Подписок, подлежащих продлению, в данный момент нет.")
             msg_box.exec()
 
-
     # отправка push уведомления в трей Windows о том, что скоро оканчивается срок подписки
     def send_notification(self, sub):
-        #если подписка не прервана
+        # если подписка не прервана
         if sub[2] != 2:
             notification.notify(
             title='ПОДПИСЧИК',
@@ -160,10 +161,12 @@ class MyApp(QMainWindow):
         self.edit_form = EditForm(self, sub)
         self.edit_form.show()
 
+    # вызов формы расчета суммы платежей по подпискам
     def open_sum_count_form(self):
         self.sum_count_form = SumCountForm(self)
         self.sum_count_form.show()
 
+    # вывод результата расчета суммы платежей за выбранный период
     def show_sum_price(self):
         start_date = self.sum_count_form.dateEdit.date()
         end_date = self.sum_count_form.dateEdit_2.date()
@@ -211,7 +214,7 @@ class MyApp(QMainWindow):
         self.color_table()
         self.add_form.close()
 
-    # сохранение изменений в БД
+    # сохранение изменений в БД при редактировании какой-то записи
     def update_subscription(self, id):
         subs = self.db_driver.get_all_subscriptions()
         row_num = self.table.currentRow()
@@ -238,11 +241,13 @@ class MyApp(QMainWindow):
         for sub in subs:
             next_date = datetime.strptime(sub[5], "%Y-%m-%d").date()
             duration = self.db_driver.get_duration_by_id(sub[3])
+            # пока следующая дата меньше стартовой, "холостой" прогон, пока дата не сравняется со стартовой
             while next_date < start_date:
                 if next_date.month + duration <= 12:
                     next_date = date(next_date.year, next_date.month + duration, next_date.day)
                 else:
                     next_date = date(next_date.year + 1, next_date.month + duration - 12, next_date.day)
+            # начиная со стартовой даты, не просто прогоняем вперед дату, но и увеличиваем итоговую сумму.
             while next_date <= end_date:
                 result_sum += sub[4]
                 if next_date.month + duration <= 12:
@@ -252,7 +257,7 @@ class MyApp(QMainWindow):
 
         return result_sum
 
-    # формирование набора данных для диаграммы
+    # формирование набора данных для диаграммы на год вперёд, начиная с месяца, следующего за текущим.
     def make_dataset(self):
         months = {1: "янв.", 2: "фев.", 3: "мар.", 4: "апр.", 5: "май", 6: "июн.", 7: "июл.", 8: "авг.", 9: "сен.",
                   10: "окт.", 11: "ноя.", 12: "дек."}
@@ -271,12 +276,13 @@ class MyApp(QMainWindow):
         return dataset
 
     # подсчет суммарной стоимости подписок за один месяц.
-    # Результат будет использован для построения столбчатой диаграммы за год.
+    # Результат будет использован для построения столбчатой диаграммы за последующий год.
     def calculate_sum_price_for_one_month(self, month, year):
         start_date = date(year, month, 1)
         end_date = date(year, month, util.get_last_day_of_month(month, year))
         return self.calculate_sum_price(start_date, end_date)
 
+    # вывод формы со столбчатой диаграммой на основе dataset
     def show_diagram(self):
         self.mpl_widget = MplWidget(self)
         self.mpl_widget.show()

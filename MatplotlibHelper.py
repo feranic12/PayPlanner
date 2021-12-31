@@ -3,6 +3,7 @@ from matplotlib import pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as Canvas
 
 
+# полотно, на котором отрисовывется столбчатая диаграмма
 class MplCanvas(Canvas):
     def __init__(self, app):
         dataset = app.make_dataset()
@@ -15,6 +16,7 @@ class MplCanvas(Canvas):
         Canvas.__init__(self, fig)
 
 
+# визуальный элемент, содержащий полотно, но котором отрисовывется столбчатая диаграмма.
 class MplWidget(QtWidgets.QWidget):
     def __init__(self, app):
         QtWidgets.QWidget.__init__(self)

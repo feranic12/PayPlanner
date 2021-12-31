@@ -18,10 +18,6 @@ class AddForm(QWidget, Ui_Form, AdvancedSetup):
         if self.textEdit.toPlainText() == "" or self.textEdit_2.toPlainText() == "":
             raise util.AddFormNotFilledException
 
-            return False
-        else:
-            return True
-
 
 
 
