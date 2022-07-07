@@ -8,7 +8,7 @@ from time import strptime, mktime, sleep
 from add_form import AddForm
 from edit_form import EditForm
 from sum_count_form import SumCountForm
-from MatplotlibHelper import MplWidget
+from MplWidget import MplWidget
 
 
 # класс приложения, представляющий главное окно приложения
@@ -249,7 +249,8 @@ class MyApp(QMainWindow):
                     next_date = date(next_date.year + 1, next_date.month + duration - 12, next_date.day)
             # начиная со стартовой даты, не просто прогоняем вперед дату, но и увеличиваем итоговую сумму.
             while next_date <= end_date:
-                result_sum += sub[4]
+                if sub[2] != 2:
+                    result_sum += sub[4]
                 if next_date.month + duration <= 12:
                     next_date = date(next_date.year, next_date.month + duration, next_date.day)
                 else:

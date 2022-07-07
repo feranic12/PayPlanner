@@ -20,9 +20,8 @@ class MplCanvas(Canvas):
 class MplWidget(QtWidgets.QWidget):
     def __init__(self, app):
         QtWidgets.QWidget.__init__(self)
-        self.canvas = MplCanvas(app)
         vbox = QtWidgets.QVBoxLayout()
-        vbox.addWidget(self.canvas)
+        vbox.addWidget(MplCanvas(app))
         self.setLayout(vbox)
 
 
