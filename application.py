@@ -8,7 +8,7 @@ from time import strptime, mktime, sleep
 from add_form import AddForm
 from edit_form import EditForm
 from sum_count_form import SumCountForm
-from MplWidget import MplWidget
+from mpl_widget import MplWidget
 
 
 # класс приложения, представляющий главное окно приложения
@@ -36,8 +36,6 @@ class MyApp(QMainWindow):
             self.table.horizontalHeaderItem(x).setTextAlignment(Qt.AlignCenter)
             self.table.horizontalHeaderItem(x).setFont(QtGui.QFont("Times", 8, QtGui.QFont.Bold))
             self.table.setColumnWidth(x,175)
-            cellinfo = QTableWidgetItem(headers[x])
-            cellinfo.setTextAlignment(Qt.AlignCenter)
 
         self.button1 = QPushButton()
         self.button1.setText("Добавить")
@@ -73,7 +71,7 @@ class MyApp(QMainWindow):
         vbox.addLayout(hbox1)
 
         self.check_updates()
-        self.load_from_file()
+        self.load_from_db()
         self.color_table()
 
     # покраска строк таблицы
@@ -119,7 +117,7 @@ class MyApp(QMainWindow):
 
         # если были подписки, оканчивающиеся сегодняи или завтра, перезагрузить таблицу
         if n > 0:
-            self.load_from_file()
+            self.load_from_db()
             self.color_table()
         else:
             msg_box = QMessageBox()
@@ -138,7 +136,7 @@ class MyApp(QMainWindow):
         )
 
     # заполнение таблицы актуальными данными из БД
-    def load_from_file(self):
+    def load_from_db(self):
         self.table.clearContents()
         subs_for_table = self.db_driver.get_subs_for_table()
         for row in range(subs_for_table.__len__()):
@@ -187,7 +185,7 @@ class MyApp(QMainWindow):
         id = self.db_driver.get_all_subscriptions()[row_num][0]
         self.db_driver.delete_sub(id)
         self.table.setRowCount(self.table.rowCount() - 1)
-        self.load_from_file()
+        self.load_from_db()
         self.color_table()
 
     # сохранение новой записи в БД по кнопке "Сохранить"
@@ -210,7 +208,7 @@ class MyApp(QMainWindow):
         tuple_to_add = (service_name, state_id, duration_id, float(price), term_end_str)
         self.db_driver.add_subscription_to_db(tuple_to_add)
         self.table.setRowCount(self.table.rowCount() + 1)
-        self.load_from_file()
+        self.load_from_db()
         self.color_table()
         self.add_form.close()
 
@@ -228,7 +226,7 @@ class MyApp(QMainWindow):
         res_date = self.edit_form.dateEdit.date().toPyDate()
         result_tuple.append(res_date.strftime("%Y-%m-%d"))
         self.db_driver.update_sub(result_tuple)
-        self.load_from_file()
+        self.load_from_db()
         self.color_table()
         self.edit_form.close()
 
