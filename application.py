@@ -17,10 +17,6 @@ class MyApp(QMainWindow):
     def __init__(self):
         super().__init__()
         self.db_driver = db.DB("pay_planner_db.db")
-        self.edit_form = None
-        self.add_form = None
-        self.sum_count_form = None
-        self.mpl_widget = None
         self.setFixedSize(QSize(950, 450))
         self.setWindowTitle("Подписчик")
         self.central_widget = QWidget()
