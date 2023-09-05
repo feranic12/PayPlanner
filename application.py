@@ -96,26 +96,17 @@ class MyApp(QMainWindow):
         for sub in subs:
             # если подписка не прервана
             if sub[2] != 2:
-                end_date = datetime.strptime(sub[5], "%Y-%m-%d").date()
-                if end_date <= date.today() + timedelta(1):
+                date_from = datetime.strptime(sub[5], "%Y-%m-%d").date()
+                if date_from <= date.today() + timedelta(1):
                     n = n + 1
                     self.send_notification(sub)
                     sleep(5)
                 # увеличение даты окончания периода подписки на период действия подписки
-                while end_date <= date.today():
+                while date_from <= date.today():
                     # продление подписки
                     duration = self.db_driver.get_duration_by_id(sub[3])
-                    if duration + end_date.month <= 12:
-                        try:
-                            end_date = date(end_date.year, end_date.month + duration, end_date.day)
-                        except ValueError:
-                            end_date = date(end_date.year, end_date.month + duration + 1, 1 )
-                    else:
-                        try:
-                            end_date = date(end_date.year + 1, end_date.month + duration - 12, end_date.day)
-                        except ValueError:
-                            end_date = date(end_date.year + 1, end_date.month + duration - 12 + 1, 1)
-                    self.db_driver.update_end_date(sub[0], end_date)
+                    date_from = util.date_forward(date_from, duration)
+                self.db_driver.update_end_date(sub[0], date_from)
 
         # если были подписки, оканчивающиеся сегодняи или завтра, перезагрузить таблицу
         if n > 0:
@@ -239,34 +230,16 @@ class MyApp(QMainWindow):
         result_sum = 0
         subs = self.db_driver.get_all_subscriptions()
         for sub in subs:
-            next_date = datetime.strptime(sub[5], "%Y-%m-%d").date()
+            date_from = datetime.strptime(sub[5], "%Y-%m-%d").date()
             duration = self.db_driver.get_duration_by_id(sub[3])
             # пока следующая дата меньше стартовой, "холостой" прогон, пока дата не сравняется со стартовой
-            while next_date < start_date:
-                if next_date.month + duration <= 12:
-                    try:
-                        next_date = date(next_date.year, next_date.month + duration, next_date.day)
-                    except ValueError:
-                        next_date = date(next_date.year, next_date.month + duration + 1, 1)
-                else:
-                    try:
-                        next_date = date(next_date.year + 1, next_date.month + duration - 12, next_date.day)
-                    except ValueError:
-                        next_date = date(next_date.year + 1, next_date.month + duration - 12 + 1, 1)
+            while date_from < start_date:
+                date_from = util.date_forward(date_from, duration)
             # начиная со стартовой даты, не просто прогоняем вперед дату, но и увеличиваем итоговую сумму.
-            while next_date <= end_date:
+            while date_from <= end_date:
                 if sub[2] != 2:
                     result_sum += sub[4]
-                if next_date.month + duration <= 12:
-                    try:
-                        next_date = date(next_date.year, next_date.month + duration, next_date.day)
-                    except ValueError:
-                        next_date = date(next_date.year, next_date.month + duration + 1, 1)
-                else:
-                    try:
-                        next_date = date(next_date.year + 1, next_date.month + duration - 12, next_date.day)
-                    except ValueError:
-                        next_date = date(next_date.year + 1, next_date.month + duration - 12 + 1, 1)
+                date_from = util.date_forward(date_from, duration)
         return result_sum
 
     # формирование набора данных для диаграммы на год вперёд, начиная с месяца, следующего за текущим.
