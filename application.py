@@ -258,10 +258,15 @@ class MyApp(QMainWindow):
                 if sub[2] != 2:
                     result_sum += sub[4]
                 if next_date.month + duration <= 12:
-                    next_date = date(next_date.year, next_date.month + duration, next_date.day)
+                    try:
+                        next_date = date(next_date.year, next_date.month + duration, next_date.day)
+                    except ValueError:
+                        next_date = date(next_date.year, next_date.month + duration + 1, 1)
                 else:
-                    next_date = date(next_date.year + 1, next_date.month + duration - 12, next_date.day)
-
+                    try:
+                        next_date = date(next_date.year + 1, next_date.month + duration - 12, next_date.day)
+                    except ValueError:
+                        next_date = date(next_date.year + 1, next_date.month + duration - 12 + 1, 1)
         return result_sum
 
     # формирование набора данных для диаграммы на год вперёд, начиная с месяца, следующего за текущим.
