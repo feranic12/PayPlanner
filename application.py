@@ -114,7 +114,7 @@ class MyApp(QMainWindow):
                         try:
                             end_date = date(end_date.year + 1, end_date.month + duration - 12, end_date.day)
                         except ValueError:
-                            end_date = date(end_date.year +1, end_date.month + duration - 12 + 1, 1)
+                            end_date = date(end_date.year + 1, end_date.month + duration - 12 + 1, 1)
                     self.db_driver.update_end_date(sub[0], end_date)
 
         # если были подписки, оканчивающиеся сегодняи или завтра, перезагрузить таблицу
@@ -244,9 +244,15 @@ class MyApp(QMainWindow):
             # пока следующая дата меньше стартовой, "холостой" прогон, пока дата не сравняется со стартовой
             while next_date < start_date:
                 if next_date.month + duration <= 12:
-                    next_date = date(next_date.year, next_date.month + duration, next_date.day)
+                    try:
+                        next_date = date(next_date.year, next_date.month + duration, next_date.day)
+                    except ValueError:
+                        next_date = date(next_date.year, next_date.month + duration + 1, 1)
                 else:
-                    next_date = date(next_date.year + 1, next_date.month + duration - 12, next_date.day)
+                    try:
+                        next_date = date(next_date.year + 1, next_date.month + duration - 12, next_date.day)
+                    except ValueError:
+                        next_date = date(next_date.year + 1, next_date.month + duration - 12 + 1, 1)
             # начиная со стартовой даты, не просто прогоняем вперед дату, но и увеличиваем итоговую сумму.
             while next_date <= end_date:
                 if sub[2] != 2:
