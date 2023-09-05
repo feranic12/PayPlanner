@@ -106,9 +106,15 @@ class MyApp(QMainWindow):
                     # продление подписки
                     duration = self.db_driver.get_duration_by_id(sub[3])
                     if duration + end_date.month <= 12:
-                        end_date = date(end_date.year, end_date.month + duration, end_date.day)
+                        try:
+                            end_date = date(end_date.year, end_date.month + duration, end_date.day)
+                        except ValueError:
+                            end_date = date(end_date.year, end_date.month + duration + 1, 1 )
                     else:
-                        end_date = date(end_date.year + 1, end_date.month + duration - 12, end_date.day)
+                        try:
+                            end_date = date(end_date.year + 1, end_date.month + duration - 12, end_date.day)
+                        except ValueError:
+                            end_date = date(end_date.year +1, end_date.month + duration - 12 + 1, 1)
                     self.db_driver.update_end_date(sub[0], end_date)
 
         # если были подписки, оканчивающиеся сегодняи или завтра, перезагрузить таблицу
