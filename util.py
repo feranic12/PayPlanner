@@ -29,13 +29,17 @@ def get_last_day_of_month(month, year):
 # промотать дату на один шаг вперёд
 def date_forward(date_from, duration):
     if duration + date_from.month <= 12:
-        try:
-            date_to = date(date_from.year, date_from.month + duration, date_from.day)
-        except ValueError:
-            date_to = date(date_from.year, date_from.month + duration + 1, 1)
+        if (date_from.day == 31)\
+            or ((date_from.day == 30) and (date_from.month == 1))\
+            or ((date_from.day == 29) and (date_from.month == 1) and (get_last_day_of_month(2, date_from.year)) == 28):
+                date_to = date(date_from.year, date_from.month + duration + 1, 1)
+        else:
+                date_to = date(date_from.year, date_from.month + duration, date_from.day)
     else:
-        try:
-            date_to = date(date_from.year + 1, date_from.month + duration - 12, date_from.day)
-        except ValueError:
-            date_to = date(date_from.year + 1, date_from.month + duration - 12 + 1, 1)
+        if (date_from.day == 31)\
+            or ((date_from.day == 30) and (date_from.month == 1))\
+            or ((date_from.day == 29) and (date_from.month == 1) and (get_last_day_of_month(2, date_from.year)) == 28):
+                date_to = date(date_from.year + 1, date_from.month + duration - 12 + 1, 1)
+        else:
+                date_to = date(date_from.year + 1, date_from.month + duration - 12, date_from.day)
     return date_to
