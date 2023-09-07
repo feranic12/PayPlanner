@@ -29,9 +29,11 @@ def get_last_day_of_month(month, year):
 # промотать дату на один шаг вперёд
 def date_forward(date_from, duration):
     if duration + date_from.month <= 12:
+        # ловим исключение ValueError, которое возникает, если день "выпадает" из месяца
         try:
             date_to = date(date_from.year, date_from.month + duration, date_from.day)
         except ValueError:
+            # и в этом случае выставляем следующую дату 1 числа следующего месяца.
             date_to = date(date_from.year, date_from.month + duration + 1, 1)
     else:
         try:
