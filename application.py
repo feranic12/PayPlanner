@@ -76,9 +76,7 @@ class MyApp(QMainWindow):
         for row in range(self.table.rowCount()):
             state = subs[row][2]
             color = None
-            if state == 0:
-                color = "yellow"
-            elif state == 1:
+            if state in (0, 1):
                 color = "lightgreen"
             elif state == 2:
                 color = "red"
