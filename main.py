@@ -1,5 +1,9 @@
+
+import sys
+
 from PyQt5 import QtWidgets, QtGui
-import application, sys
+
+import application
 
 
 # главная точка входа в приложение
