@@ -1,10 +1,16 @@
-from plyer import notification
-from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, QVBoxLayout,QHBoxLayout, QWidget, QTableWidget,QTableWidgetItem, QPushButton, QMessageBox
+import sys
+from time import strptime, mktime, sleep
+from datetime import datetime, date, timedelta
+
+from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, \
+    QVBoxLayout, QHBoxLayout, QWidget, QTableWidget, QTableWidgetItem, \
+    QPushButton, QMessageBox
 from PyQt5.QtCore import QSize, Qt, QDate
 from PyQt5 import QtGui
-import sys, db, util
-from datetime import datetime, date, timedelta
-from time import strptime, mktime, sleep
+from plyer import notification
+
+import db
+import util
 from add_form import AddForm
 from edit_form import EditForm
 from sum_count_form import SumCountForm
@@ -25,13 +31,15 @@ class MyApp(QMainWindow):
         self.central_widget.setLayout(vbox)
         self.table = QTableWidget()
         self.table.setColumnCount(5)
-        headers = ["Название сервиса", "Состояние подписки","Период продления","Сумма", "Срок окончания"]
+        headers = ["Название сервиса", "Состояние подписки",
+                   "Период продления", "Сумма", "Срок окончания"]
         self.table.setRowCount(self.db_driver.get_subs_count())
         self.table.setHorizontalHeaderLabels(headers)
         for x in range(self.table.columnCount()):
             self.table.horizontalHeaderItem(x).setTextAlignment(Qt.AlignCenter)
-            self.table.horizontalHeaderItem(x).setFont(QtGui.QFont("Times", 8, QtGui.QFont.Bold))
-            self.table.setColumnWidth(x,175)
+            self.table.horizontalHeaderItem(x).setFont(
+                QtGui.QFont("Times", 8, QtGui.QFont.Bold))
+            self.table.setColumnWidth(x, 175)
 
         self.button1 = QPushButton()
         self.button1.setText("Добавить")
@@ -85,7 +93,8 @@ class MyApp(QMainWindow):
                 cellinfo.setBackground(QtGui.QColor(color))
                 self.table.setItem(row, col, cellinfo)
 
-    # проверка необходимости продления каких-либо подписок если исткают сегодня или завтра
+    # проверка необходимости продления каких-либо подписок
+    # если истекают сегодня или завтра
     # и фактическое продление подписок, истекающих сегодня.
     def check_updates(self):
         subs = self.db_driver.get_all_subscriptions()
@@ -99,32 +108,37 @@ class MyApp(QMainWindow):
                     n = n + 1
                     self.send_notification(sub)
                     sleep(5)
-                # увеличение даты окончания периода подписки на период действия подписки
+                # увеличение даты окончания периода подписки
+                # на период действия подписки
                 while date_from <= date.today():
                     # продление подписки
                     duration = self.db_driver.get_duration_by_id(sub[3])
                     date_from = util.date_forward(date_from, duration)
                 self.db_driver.update_end_date(sub[0], date_from)
 
-        # если были подписки, оканчивающиеся сегодняи или завтра, перезагрузить таблицу
+        # если были подписки, оканчивающиеся сегодняи или завтра,
+        # перезагрузить таблицу
         if n > 0:
             self.load_from_db()
             self.color_table()
         else:
             msg_box = QMessageBox()
-            msg_box.setText("Подписок, подлежащих продлению, в данный момент нет.")
+            msg_box.setText(
+                "Подписок, подлежащих продлению, в данный момент нет.")
             msg_box.exec()
 
-    # отправка push уведомления в трей Windows о том, что скоро оканчивается срок подписки
+    # отправка push уведомления в трей Windows о том,
+    # что скоро оканчивается срок подписки
     def send_notification(self, sub):
         # если подписка не прервана
         if sub[2] != 2:
             notification.notify(
-            title='ПОДПИСЧИК',
-            message=sub[5] + ' истекает срок продления подписки ' + sub[1] + ' . Будет списано ' + str(sub[4]) + ' рублей',
-            app_name='PayPlanner',
-            app_icon='icons/icon1.ico'
-        )
+                title='ПОДПИСЧИК',
+                message=sub[5] + ' истекает срок продления подписки ' + sub[1]
+                               + ' . Будет списано ' + str(sub[4]) + ' рублей',
+                app_name='PayPlanner',
+                app_icon='icons/icon1.ico'
+            )
 
     # заполнение таблицы актуальными данными из БД
     def load_from_db(self):
@@ -133,8 +147,10 @@ class MyApp(QMainWindow):
         for row in range(subs_for_table.__len__()):
             for col in range(self.table.columnCount()):
                 if col == 2:
-                    cellinfo = QTableWidgetItem(str(subs_for_table[row][col]) + " мес.")
-                else: cellinfo = QTableWidgetItem(str(subs_for_table[row][col]))
+                    cellinfo = QTableWidgetItem(
+                        str(subs_for_table[row][col]) + " мес.")
+                else:
+                    cellinfo = QTableWidgetItem(str(subs_for_table[row][col]))
                 self.table.setItem(row, col, cellinfo)
 
     # вызов формы добавления записи в таблицу
@@ -167,7 +183,9 @@ class MyApp(QMainWindow):
             msg_box.exec()
             return
         msg_box = QMessageBox()
-        msg_box.setText("Сумма платежей за выбранный период: {0} рублей.".format(result_sum))
+        msg_box.setText(
+            "Сумма платежей за выбранный период: {0} рублей.".format(
+                result_sum))
         msg_box.exec()
 
     # удаление выбранной записи из таблицы
@@ -196,7 +214,8 @@ class MyApp(QMainWindow):
         term_end_str = term_end.strftime("%Y-%m-%d")
         duration_id = self.add_form.comboBox_2.currentIndex()
         price = self.add_form.textEdit_2.toPlainText()
-        tuple_to_add = (service_name, state_id, duration_id, float(price), term_end_str)
+        tuple_to_add = (
+            service_name, state_id, duration_id, float(price), term_end_str)
         self.db_driver.add_subscription_to_db(tuple_to_add)
         self.table.setRowCount(self.table.rowCount() + 1)
         self.load_from_db()
@@ -230,36 +249,50 @@ class MyApp(QMainWindow):
         for sub in subs:
             date_from = datetime.strptime(sub[5], "%Y-%m-%d").date()
             duration = self.db_driver.get_duration_by_id(sub[3])
-            # пока следующая дата меньше стартовой, "холостой" прогон, пока дата не сравняется со стартовой
+            # пока следующая дата меньше стартовой,
+            # "холостой" прогон, пока дата не сравняется со стартовой
             while date_from < start_date:
                 date_from = util.date_forward(date_from, duration)
-            # начиная со стартовой даты, не просто прогоняем вперед дату, но и увеличиваем итоговую сумму.
+            # начиная со стартовой даты, не просто прогоняем вперед дату,
+            # но и увеличиваем итоговую сумму.
             while date_from <= end_date:
                 if sub[2] != 2:
                     result_sum += sub[4]
                 date_from = util.date_forward(date_from, duration)
         return result_sum
 
-    # формирование набора данных для диаграммы на год вперёд, начиная с месяца, следующего за текущим.
+    # формирование набора данных для диаграммы на год вперёд,
+    # начиная с месяца, следующего за текущим.
     def make_dataset(self):
-        months = {1: "янв.", 2: "фев.", 3: "мар.", 4: "апр.", 5: "май", 6: "июн.", 7: "июл.", 8: "авг.", 9: "сен.",
-                  10: "окт.", 11: "ноя.", 12: "дек."}
+        months = {1: "янв.", 2: "фев.", 3: "мар.", 4: "апр.",
+                  5: "май", 6: "июн.", 7: "июл.", 8: "авг.",
+                  9: "сен.", 10: "окт.", 11: "ноя.", 12: "дек."}
         sum_values = []
         xticks = []
-        start_month = 1 if datetime.today().month == 12 else datetime.today().month + 1
-        start_year = datetime.today().year + 1 if datetime.today().month == 12 else datetime.today().year
+        start_month = 1 \
+            if datetime.today().month == 12 \
+            else datetime.today().month + 1
+        start_year = datetime.today().year + 1 \
+            if datetime.today().month == 12 \
+            else datetime.today().year
         for current_month in range(start_month, start_month + 12):
             if current_month <= 12:
-                sum_values.append(self.calculate_sum_price_for_one_month(current_month, start_year))
+                sum_values.append(
+                    self.calculate_sum_price_for_one_month(
+                        current_month, start_year))
                 xticks.append(months[current_month] + str(start_year))
             else:
-                sum_values.append(self.calculate_sum_price_for_one_month(current_month - 12, start_year + 1))
-                xticks.append(months[current_month - 12] + str(start_year + 1))
+                sum_values.append(
+                    self.calculate_sum_price_for_one_month(
+                        current_month - 12, start_year + 1))
+                xticks.append(
+                    months[current_month - 12] + str(start_year + 1))
         dataset = [sum_values, xticks]
         return dataset
 
     # подсчет суммарной стоимости подписок за один месяц.
-    # Результат будет использован для построения столбчатой диаграммы за последующий год.
+    # Результат будет использован для
+    # построения столбчатой диаграммы за последующий год.
     def calculate_sum_price_for_one_month(self, month, year):
         start_date = date(year, month, 1)
         end_date = date(year, month, util.get_last_day_of_month(month, year))
@@ -269,7 +302,3 @@ class MyApp(QMainWindow):
     def show_diagram(self):
         self.mpl_widget = MplWidget(self)
         self.mpl_widget.show()
-
-
-
-
