@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QMainWindow, QMessageBox
 from PyQt5.QtCore import QDate
 
-from widgets_py.widget_add import Ui_Form
+from widgets_py.widget_add_edit_from_ui import Ui_Form
 from advanced_setup import AdvancedSetup
 
 
