@@ -1,10 +1,12 @@
 from PyQt5.QtWidgets import QWidget, QMainWindow, QMessageBox
 from PyQt5.QtCore import QDate
+
 from widget_add import Ui_Form
 from advanced_setup import AdvancedSetup
 
 
-# класс, представляющий форму редактирования подписки, наследующий, в т.ч. от класса, полученного в визуальном редакторе
+# класс, представляющий форму редактирования подписки, наследующий,
+# в т.ч. от класса, полученного в визуальном редакторе
 class EditForm(QWidget, Ui_Form, AdvancedSetup):
     def __init__(self, app, sub):
         QWidget.__init__(self)
@@ -19,6 +21,3 @@ class EditForm(QWidget, Ui_Form, AdvancedSetup):
         self.textEdit_2.setText(str(sub[4]))
         self.dateEdit.setDate(
             QDate(int(sub[5][:4]), int(sub[5][5:7]), int(sub[5][8:10])))
-
-
-

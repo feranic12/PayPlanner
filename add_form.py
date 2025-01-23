@@ -1,10 +1,12 @@
 from PyQt5.QtWidgets import QWidget, QMessageBox
+
 from widget_add import Ui_Form
 from advanced_setup import AdvancedSetup
-import util
+import exceptions
 
 
-# класс, представляющий форму добавления новой записи, наследующий, в т.ч. от класса, полученного в визуальном редакторе
+# класс, представляющий форму добавления новой записи, наследующий,
+#  в т.ч. от класса, полученного в визуальном редакторе
 class AddForm(QWidget, Ui_Form, AdvancedSetup):
     def __init__(self, app):
         QWidget.__init__(self)
@@ -15,12 +17,6 @@ class AddForm(QWidget, Ui_Form, AdvancedSetup):
 
     # проверка на заполненность обязательных полей
     def check_form(self):
-        if self.textEdit.toPlainText() == "" or self.textEdit_2.toPlainText() == "":
-            raise util.AddFormNotFilledException
-
-
-
-
-
-
-
+        if self.textEdit.toPlainText() == "" \
+                or self.textEdit_2.toPlainText() == "":
+            raise exceptions.AddFormNotFilledError
