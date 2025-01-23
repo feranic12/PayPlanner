@@ -16,12 +16,11 @@ class MplCanvas(Canvas):
         Canvas.__init__(self, fig)
 
 
-# визуальный элемент, содержащий полотно, на котором отрисовывется столбчатая диаграмма.
+# визуальный элемент, содержащий полотно,
+# на котором отрисовывется столбчатая диаграмма.
 class MplWidget(QtWidgets.QWidget):
     def __init__(self, app):
         QtWidgets.QWidget.__init__(self)
         vbox = QtWidgets.QVBoxLayout()
         vbox.addWidget(MplCanvas(app))
         self.setLayout(vbox)
-
-

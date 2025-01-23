@@ -11,6 +11,7 @@ from plyer import notification
 
 import db
 import util
+import exceptions
 from add_form import AddForm
 from edit_form import EditForm
 from sum_count_form import SumCountForm
@@ -177,7 +178,7 @@ class MyApp(QMainWindow):
         end_date = self.sum_count_form.dateEdit_2.date()
         try:
             result_sum = self.calculate_sum_price(start_date, end_date)
-        except util.WrongDatesException:
+        except exceptions.WrongDatesError:
             msg_box = QMessageBox()
             msg_box.setText("Ошибка! Дата начала позже даты окончания!")
             msg_box.exec()
@@ -201,7 +202,7 @@ class MyApp(QMainWindow):
     def save_new_subscription(self):
         try:
             self.add_form.check_form()
-        except util.AddFormNotFilledException:
+        except exceptions.AddFormNotFilledError:
             msg = QMessageBox()
             msg.setWindowTitle("Внимание!")
             msg.setText("Внимание! Заполнены не все поля!")
@@ -243,7 +244,7 @@ class MyApp(QMainWindow):
     # подсчет суммарной стоимости подписок за период
     def calculate_sum_price(self, start_date, end_date):
         if start_date > end_date:
-            raise util.WrongDatesException
+            raise exceptions.WrongDatesError
         result_sum = 0
         subs = self.db_driver.get_all_subscriptions()
         for sub in subs:

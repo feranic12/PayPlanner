@@ -1,6 +1,8 @@
-from PyQt5.QtWidgets import QWidget, QDialog, QMessageBox
-from widget_sum_count import Ui_Form
 from datetime import date, timedelta
+
+from PyQt5.QtWidgets import QWidget, QDialog, QMessageBox
+
+from widget_sum_count import Ui_Form
 
 
 class SumCountForm(QWidget, Ui_Form):

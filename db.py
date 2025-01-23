@@ -22,10 +22,12 @@ class DB:
         cur.close()
         return result
 
-    # получение выборки из нескольких таблиц БД, для заполнения таблицы в главном окне
+    # получение выборки из нескольких таблиц БД,
+    #  для заполнения таблицы в главном окне
     def get_subs_for_table(self):
         cur = self.con.cursor()
-        cur.execute("""select s.service_name, st.name, d.duration, s.price, s.term_end 
+        cur.execute("""select s.service_name, st.name,
+                    d.duration, s.price, s.term_end
                     from subscriptions s join states st on s.state_id = st.id
                     join durations d on s.duration_id = d.id""")
         result = cur.fetchall()
@@ -63,7 +65,8 @@ class DB:
         cur.execute("select max(id) from subscriptions")
         n = cur.fetchone()[0]
         try:
-            cur.execute("insert into subscriptions values(?,?,?,?,?,?)", [n+1, t[0], t[1], t[2], t[3], t[4]])
+            cur.execute("insert into subscriptions values(?,?,?,?,?,?)",
+                        [n+1, t[0], t[1], t[2], t[3], t[4]])
         except sqlite3.DatabaseError as err:
             print("Ошибка работы с БД " + err)
         self.con.commit()
@@ -82,7 +85,7 @@ class DB:
         cur = self.con.cursor()
         sql = """update subscriptions set service_name = ?, state_id = ?,
                   duration_id = ?, price = ?, term_end = ? where id = ?"""
-        cur.execute(sql,[t[1], t[2], t[3], t[4], t[5], t[0]])
+        cur.execute(sql, [t[1], t[2], t[3], t[4], t[5], t[0]])
         self.con.commit()
         cur.close()
 
@@ -90,7 +93,7 @@ class DB:
     def delete_sub(self, id):
         cur = self.con.cursor()
         try:
-            cur.execute("delete from subscriptions where id=?",[id])
+            cur.execute("delete from subscriptions where id=?", [id])
         except sqlite3.DatabaseError as err:
             print(err)
         self.con.commit()
@@ -99,7 +102,8 @@ class DB:
     # обновление конечной даты подписки при ее продлении
     def update_end_date(self, id, date):
         cur = self.con.cursor()
-        cur.execute("update subscriptions set term_end = ? where id = ?", [date, id])
+        cur.execute("update subscriptions "
+                    "set term_end = ? where id = ?", [date, id])
         self.con.commit()
         cur.close()
 
