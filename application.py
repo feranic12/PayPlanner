@@ -12,10 +12,10 @@ from plyer import notification
 import db
 import util
 import exceptions
-from add_form import AddForm
-from edit_form import EditForm
-from sum_count_form import SumCountForm
-from mpl_widget import MplWidget
+from widgets_py.add_form import AddForm
+from widgets_py.edit_form import EditForm
+from widgets_py.sum_count_form import SumCountForm
+from widgets_py.mpl_widget import MplWidget
 
 
 # класс приложения, представляющий главное окно приложения

@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QWidget, QMessageBox
 
-from widget_add import Ui_Form
+from widgets_py.widget_add import Ui_Form
 from advanced_setup import AdvancedSetup
 import exceptions
 
