@@ -24,12 +24,10 @@ class MyApp(QMainWindow):
     def __init__(self):
         super().__init__()
         self.db_driver = db.DB("pay_planner_db.db")
+
         self.setFixedSize(QSize(950, 450))
         self.setWindowTitle("Подписчик")
         self.central_widget = QWidget()
-        self.setCentralWidget(self.central_widget)
-        vbox = QVBoxLayout()
-        self.central_widget.setLayout(vbox)
         self.table = QTableWidget()
         self.table.setColumnCount(5)
         headers = ["Название сервиса", "Состояние подписки",
@@ -41,6 +39,7 @@ class MyApp(QMainWindow):
             self.table.horizontalHeaderItem(x).setFont(
                 QtGui.QFont("Times", 8, QtGui.QFont.Bold))
             self.table.setColumnWidth(x, 175)
+        self.setCentralWidget(self.central_widget)
 
         self.button1 = QPushButton()
         self.button1.setText("Добавить")
@@ -63,6 +62,7 @@ class MyApp(QMainWindow):
         self.button6.clicked.connect(self.show_diagram)
         self.table.doubleClicked.connect(self.edit_selected)
 
+        vbox = QVBoxLayout()
         vbox.addWidget(self.table)
         hbox = QHBoxLayout()
         hbox.addWidget(self.button1)
@@ -74,6 +74,12 @@ class MyApp(QMainWindow):
         hbox1.addWidget(self.button5)
         hbox1.addWidget(self.button6)
         vbox.addLayout(hbox1)
+        self.central_widget.setLayout(vbox)
+
+        self.add_form = None
+        self.edit_form = None
+        self.sum_count_form = None
+        self.mpl_widget = None
 
         self.check_updates()
         self.load_from_db()
