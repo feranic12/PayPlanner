@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import QWidget, QDialog, QMessageBox
 from widgets_py.widget_sum_count_from_ui import Ui_Form
 
 
+# форма подсчёта суммарной стоимости платежей по подпискам за период
 class SumCountForm(QWidget, Ui_Form):
     def __init__(self, app):
         QWidget.__init__(self)

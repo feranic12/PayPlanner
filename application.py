@@ -23,8 +23,10 @@ class MyApp(QMainWindow):
     # инициализация элементов главного окна
     def __init__(self):
         super().__init__()
+        # инициализация драйвера БД, инкапсулирующего работу с SQLite 3
         self.db_driver = db.DB("pay_planner_db.db")
 
+        # создание и инициализация элементов интерфейса главного окна
         self.setFixedSize(QSize(950, 450))
         self.setWindowTitle("Подписчик")
         self.central_widget = QWidget()
@@ -39,8 +41,6 @@ class MyApp(QMainWindow):
             self.table.horizontalHeaderItem(x).setFont(
                 QtGui.QFont("Times", 8, QtGui.QFont.Bold))
             self.table.setColumnWidth(x, 175)
-        self.setCentralWidget(self.central_widget)
-
         self.button1 = QPushButton()
         self.button1.setText("Добавить")
         self.button2 = QPushButton()
@@ -54,14 +54,7 @@ class MyApp(QMainWindow):
         self.button6 = QPushButton()
         self.button6.setText("Диаграмма")
 
-        self.button1.clicked.connect(self.add_new_subscription)
-        self.button2.clicked.connect(self.edit_selected)
-        self.button3.clicked.connect(self.delete_subscription)
-        self.button4.clicked.connect(self.check_updates)
-        self.button5.clicked.connect(self.open_sum_count_form)
-        self.button6.clicked.connect(self.show_diagram)
-        self.table.doubleClicked.connect(self.edit_selected)
-
+        self.setCentralWidget(self.central_widget)
         vbox = QVBoxLayout()
         vbox.addWidget(self.table)
         hbox = QHBoxLayout()
@@ -76,6 +69,16 @@ class MyApp(QMainWindow):
         vbox.addLayout(hbox1)
         self.central_widget.setLayout(vbox)
 
+        # создание связей между элементами главного окна и обработчиками их нажатия.
+        self.button1.clicked.connect(self.add_new_subscription)
+        self.button2.clicked.connect(self.edit_selected)
+        self.button3.clicked.connect(self.delete_subscription)
+        self.button4.clicked.connect(self.check_updates)
+        self.button5.clicked.connect(self.open_sum_count_form)
+        self.button6.clicked.connect(self.show_diagram)
+        self.table.doubleClicked.connect(self.edit_selected)
+
+        # создание и инициализация объектов вспомогательных форм
         self.add_form = None
         self.edit_form = None
         self.sum_count_form = None
@@ -85,14 +88,19 @@ class MyApp(QMainWindow):
         self.load_from_db()
         self.color_table()
 
-    # покраска строк таблицы
+    # раскраска строк таблицы
     def color_table(self):
         subs = self.db_driver.get_all_subscriptions()
         for row in range(self.table.rowCount()):
             state = subs[row][2]
             color = None
+            # есди статус подписки "новая" или "продлена",
+            # строка закрашивается салатовым цветом
             if state in (0, 1):
                 color = "lightgreen"
+
+            # если статус подписки "прервана",
+            # строка закрашивается красным цветом.
             elif state == 2:
                 color = "red"
             for col in range(self.table.columnCount()):
@@ -118,16 +126,19 @@ class MyApp(QMainWindow):
                 # увеличение даты окончания периода подписки
                 # на период действия подписки
                 while date_from <= date.today():
-                    # продление подписки
+                    # продление подписки, пока дата продления менее или равна "сегодняшней"
                     duration = self.db_driver.get_duration_by_id(sub[3])
                     date_from = util.date_forward(date_from, duration)
+                # обновление даты окончания срока подписки в БД
                 self.db_driver.update_end_date(sub[0], date_from)
 
-        # если были подписки, оканчивающиеся сегодняи или завтра,
-        # перезагрузить таблицу
+        # если были подписки, оканчивающиеся сегодня или завтра,
+        # перезагрузить и раскрасить таблицу
         if n > 0:
             self.load_from_db()
             self.color_table()
+
+        # иначе выдается сообщение об отсутствии подписок, подлежащих продлению.
         else:
             msg_box = QMessageBox()
             msg_box.setText(
@@ -139,6 +150,7 @@ class MyApp(QMainWindow):
     def send_notification(self, sub):
         # если подписка не прервана
         if sub[2] != 2:
+            # используется класс notification сторонней библиотеки "plyer"
             notification.notify(
                 title='ПОДПИСЧИК',
                 message=sub[5] + ' истекает срок продления подписки ' + sub[1]
@@ -149,6 +161,7 @@ class MyApp(QMainWindow):
 
     # заполнение таблицы актуальными данными из БД
     def load_from_db(self):
+        # очистка текущего содержания таблицы
         self.table.clearContents()
         subs_for_table = self.db_driver.get_subs_for_table()
         for row in range(subs_for_table.__len__()):
@@ -184,6 +197,7 @@ class MyApp(QMainWindow):
         end_date = self.sum_count_form.dateEdit_2.date()
         try:
             result_sum = self.calculate_sum_price(start_date, end_date)
+        # перехват исключения, сигнализирующего о том, что дата начала превышает дату окончания
         except exceptions.WrongDatesError:
             msg_box = QMessageBox()
             msg_box.setText("Ошибка! Дата начала позже даты окончания!")
@@ -208,6 +222,8 @@ class MyApp(QMainWindow):
     def save_new_subscription(self):
         try:
             self.add_form.check_form()
+        # если перехвачено исключение, сигнализирующее о том, что заполнены не все
+        # обязательные поля формы, выдается соответствующее сообщение.
         except exceptions.AddFormNotFilledError:
             msg = QMessageBox()
             msg.setWindowTitle("Внимание!")

@@ -17,6 +17,7 @@ class AddForm(QWidget, Ui_Form, AdvancedSetup):
 
     # проверка на заполненность обязательных полей
     def check_form(self):
+        # если одно из полей ввода не заполнено, возбуждается исключение
         if self.textEdit.toPlainText() == "" \
                 or self.textEdit_2.toPlainText() == "":
             raise exceptions.AddFormNotFilledError

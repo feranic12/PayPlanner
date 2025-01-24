@@ -14,7 +14,7 @@ def get_last_day_of_month(month, year):
             return 28
 
 
-# промотать дату на один шаг вперёд
+# промотать дату окончания срока подписки на один шаг вперёд
 def date_forward(date_from, duration):
     if duration + date_from.month <= 12:
         # ловим исключение ValueError, которое возникает, если день "выпадает" из месяца
