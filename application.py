@@ -84,6 +84,7 @@ class MyApp(QMainWindow):
         self.sum_count_form = None
         self.mpl_widget = None
 
+        # выполнение первичной проверки наличия просроченных подписок
         self.check_updates()
     # раскраска строк таблицы
     def color_table(self):
