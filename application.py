@@ -85,9 +85,6 @@ class MyApp(QMainWindow):
         self.mpl_widget = None
 
         self.check_updates()
-        self.load_from_db()
-        self.color_table()
-
     # раскраска строк таблицы
     def color_table(self):
         subs = self.db_driver.get_all_subscriptions()
@@ -131,15 +128,11 @@ class MyApp(QMainWindow):
                     date_from = util.date_forward(date_from, duration)
                 # обновление даты окончания срока подписки в БД
                 self.db_driver.update_end_date(sub[0], date_from)
-
-        # если были подписки, оканчивающиеся сегодня или завтра,
-        # перезагрузить и раскрасить таблицу
-        if n > 0:
-            self.load_from_db()
-            self.color_table()
-
-        # иначе выдается сообщение об отсутствии подписок, подлежащих продлению.
-        else:
+        # перезагружаем таблицу.
+        self.load_from_db()
+        self.color_table()
+        # если n = 0 ,то выдается сообщение об отсутствии подписок, подлежащих продлению.
+        if not n:
             msg_box = QMessageBox()
             msg_box.setText(
                 "Подписок, подлежащих продлению, в данный момент нет.")
