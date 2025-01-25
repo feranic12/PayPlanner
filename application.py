@@ -107,29 +107,33 @@ class MyApp(QMainWindow):
                 self.table.setItem(row, col, cellinfo)
 
     # проверка необходимости продления каких-либо подписок
-    # если истекают сегодня или завтра
-    # и фактическое продление подписок, истекающих сегодня.
+
+    # и
     def check_updates(self):
         subs = self.db_driver.get_all_subscriptions()
         # n - число подписок, оканчивающихся сегодня или завтра
         n = 0
+        # для каждой подписки
         for sub in subs:
             # если подписка не прервана
             if sub[2] != 2:
+                # если дата продления подписки ранее завтрашнего дня
+                # или равна завтрашнему дню,
+                # отправляется уведомление в трей Windows о продлении подписки
                 date_from = datetime.strptime(sub[5], "%Y-%m-%d").date()
                 if date_from <= date.today() + timedelta(1):
                     n = n + 1
                     self.send_notification(sub)
                     sleep(5)
-                # увеличение даты окончания периода подписки
-                # на период действия подписки
+                # пока дата продления подписки ранее сегодняшнего дня
+                # или равна ему, увеличивать срок окончания подписки
+                # на период её продления
                 while date_from <= date.today():
-                    # продление подписки, пока дата продления менее или равна "сегодняшней"
                     duration = self.db_driver.get_duration_by_id(sub[3])
                     date_from = util.date_forward(date_from, duration)
                 # обновление даты окончания срока подписки в БД
                 self.db_driver.update_end_date(sub[0], date_from)
-        # перезагружаем таблицу.
+        # обновление таблицы в главном окне данными из БД
         self.load_from_db()
         self.color_table()
         # если n = 0 ,то выдается сообщение об отсутствии подписок, подлежащих продлению.
