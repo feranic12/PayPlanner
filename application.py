@@ -86,6 +86,7 @@ class MyApp(QMainWindow):
 
         # выполнение первичной проверки наличия просроченных подписок
         self.check_updates()
+
     # раскраска строк таблицы
     def color_table(self):
         subs = self.db_driver.get_all_subscriptions()
@@ -107,8 +108,6 @@ class MyApp(QMainWindow):
                 self.table.setItem(row, col, cellinfo)
 
     # проверка необходимости продления каких-либо подписок
-
-    # и
     def check_updates(self):
         subs = self.db_driver.get_all_subscriptions()
         # n - число подписок, оканчивающихся сегодня или завтра
