@@ -15,7 +15,7 @@ import exceptions
 from widgets_py.widget_add import AddForm
 from widgets_py.widget_edit import EditForm
 from widgets_py.widget_sum_count import SumCountForm
-from widgets_py.widget_matplotlib import MplWidget
+#from widgets_py.widget_matplotlib import MplWidget
 
 
 # класс приложения, представляющий главное окно приложения
@@ -51,8 +51,8 @@ class MyApp(QMainWindow):
         self.button4.setText("Проверить")
         self.button5 = QPushButton()
         self.button5.setText("Сумма за период")
-        self.button6 = QPushButton()
-        self.button6.setText("Диаграмма")
+        #self.button6 = QPushButton()
+        #self.button6.setText("Диаграмма")
 
         self.setCentralWidget(self.central_widget)
         vbox = QVBoxLayout()
@@ -65,7 +65,7 @@ class MyApp(QMainWindow):
         vbox.addLayout(hbox)
         hbox1 = QHBoxLayout()
         hbox1.addWidget(self.button5)
-        hbox1.addWidget(self.button6)
+        #hbox1.addWidget(self.button6)
         vbox.addLayout(hbox1)
         self.central_widget.setLayout(vbox)
 
@@ -75,14 +75,14 @@ class MyApp(QMainWindow):
         self.button3.clicked.connect(self.delete_subscription)
         self.button4.clicked.connect(self.check_updates)
         self.button5.clicked.connect(self.open_sum_count_form)
-        self.button6.clicked.connect(self.show_diagram)
+        #self.button6.clicked.connect(self.show_diagram)
         self.table.doubleClicked.connect(self.edit_selected)
 
         # создание и инициализация объектов вспомогательных форм
         self.add_form = None
         self.edit_form = None
         self.sum_count_form = None
-        self.mpl_widget = None
+        #self.mpl_widget = None
 
         # выполнение первичной проверки наличия просроченных подписок
         self.check_updates()
@@ -93,7 +93,7 @@ class MyApp(QMainWindow):
         for row in range(self.table.rowCount()):
             state = subs[row][2]
             color = None
-            # есди статус подписки "новая" или "продлена",
+            # если статус подписки "новая" или "продлена",
             # строка закрашивается салатовым цветом
             if state in (0, 1):
                 color = "lightgreen"
@@ -319,6 +319,6 @@ class MyApp(QMainWindow):
         return self.calculate_sum_price(start_date, end_date)
 
     # вывод формы со столбчатой диаграммой на основе dataset
-    def show_diagram(self):
-        self.mpl_widget = MplWidget(self)
-        self.mpl_widget.show()
+    #    def show_diagram(self):
+    #    self.mpl_widget = MplWidget(self)
+    #    self.mpl_widget.show()
