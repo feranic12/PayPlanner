@@ -27,7 +27,7 @@ class MyApp(QMainWindow):
         self.db_driver = db.DB("pay_planner_db.db")
 
         # создание и инициализация элементов интерфейса главного окна
-        self.setFixedSize(QSize(950, 450))
+        self.setFixedSize(QSize(1010, 450))
         self.setWindowTitle("Подписчик")
         self.central_widget = QWidget()
         self.table = QTableWidget()
@@ -40,7 +40,7 @@ class MyApp(QMainWindow):
             self.table.horizontalHeaderItem(x).setTextAlignment(Qt.AlignCenter)
             self.table.horizontalHeaderItem(x).setFont(
                 QtGui.QFont("Times", 8, QtGui.QFont.Bold))
-            self.table.setColumnWidth(x, 175)
+            self.table.setColumnWidth(x, 185)
         self.button1 = QPushButton()
         self.button1.setText("Добавить")
         self.button2 = QPushButton()
